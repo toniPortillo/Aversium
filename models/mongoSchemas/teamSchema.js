@@ -1,0 +1,14 @@
+'use strict';
+const mongoose = require('../../config/mongoose/dbAversium');
+const Schema = mongoose.Schema;
+const user = require('./userSchema').user; 
+
+const teamSchemas = {
+
+    team: new Schema({
+        teamname: {type: String},
+        users: [user]
+    })
+};
+
+module.exports = teamSchemas;
