@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Registro de usuario</title>
+        <link rel='stylesheet' href='/stylesheets/style.css'/>
+    </head>
+    <body>
+        <h2>Registro de usuario</h2>
+        <p>Introduzca sus datos:</p>
+        <form method="POST" action="/users/register">
+            <p>
+                <label for="username">Nombre de usuario:</label>
+                <input type="text" name="username" id="username" required/>
+                </br>
+
+                <label for="password">Contraseña:</label>
+                <input type="password" name="password" id="password" required/>
+                </br>
+
+                <label for="role">Elige tu rol:</label>
+                <select name="role" id="role">
+                    <option value="productOwner">Product Owner</option>
+                    <option value="scrumMaster">Scrum Master</option>
+                    <option value="developer">Desarrollador</option>
+                </select>
+                </br>
+
+                <input type="submit" name="Enviar" />
+            </p>
+        </form>
+    </body>
+</html>
