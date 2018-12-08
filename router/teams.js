@@ -6,7 +6,7 @@ let router = express.Router();
 //let team_controllers = require('./controllers/teamController');
 
 router.get('/', function(req, res) {
-    res.render('listTeams.ejs');
+    res.render('listTeams.ejs', {pruebesita: "De puta madre"});
 });
 
 router.get('/listaEquipos', function(req, res) {

@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Creación de equipo</title>
+        <link rel='stylesheet' href='/stylesheets/style.css'/>
+    </head>
+    <body>
+        <h2>Creación de equipo: </h2>
+        <p>Introduzca sus datos: </p>
+        <form method="POST" action="/teams/createTeam">
+            <p>
+                <label for="teamname">Nombre del equipo:</label>
+                <input type="text" name="teamname" id="teamname" required/>
+                </br>
+
+                <label for="creator">Creador del equipo:</label>
+                <input type="text" name="creator" id="creator" required/>
+                </br>
+
+                <laber for="maxmembers">Número de miembros:</laber>
+                <input type="number" name="maxmembers" id="maxmembers" required/>
+                </br>
+
+                <input type="submit" name="Enviar" />
+            </p>
+        
+        </form>
+    </body>
+</html>

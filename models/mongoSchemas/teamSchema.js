@@ -7,6 +7,8 @@ const teamSchemas = {
 
     team: new Schema({
         teamname: {type: String},
+        creator: {type: String},
+        maxmembers: {type: Number},
         users: [user]
     })
 };
