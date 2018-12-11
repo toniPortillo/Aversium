@@ -3,14 +3,11 @@
 let express = require('express');
 let router = express.Router();
 
-//let team_controllers = require('./controllers/teamController');
+let team_controllers = require('./controllers/teamController');
 
-router.get('/', function(req, res) {
-    res.render('listTeams.ejs', {pruebesita: "De puta madre"});
-});
+router.get('/', team_controllers.team_list_get);
 
-router.get('/listaEquipos', function(req, res) {
-    res.send('respond with a resource');
-});
+router.get('/createTeam', team_controllers.team_create_get);
+router.post('/createTeam', team_controllers.team_create_post);
 
 module.exports = router;
