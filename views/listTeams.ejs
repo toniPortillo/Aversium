@@ -6,7 +6,18 @@
     </head>
     <body>
         <h2>Lista de equipos:</h2>
-        <%= pruebesita%>
+
+            <%for(let i=0; i<list.length; i++){%>
+      
+            <ul>
+            <li><strong>Nombre equipo:</strong><%=list[i].teamname%></li>
+            <li><strong>Creador del equipo:</strong><%=list[i].creator%></li>        
+            <li><strong>Número de miembros del equipo:</strong><%=list[i].maxmembers%></li>   
+            <li><strong>Usuarios del equipo:</strong><%=list[i].users%></li>
+            </ul>
+            <%};%>
+
+     
     </body>
 </html>
 

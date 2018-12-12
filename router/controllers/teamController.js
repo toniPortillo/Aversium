@@ -2,15 +2,33 @@
 let Team = require('../../models/mongoModels/teamModel').Team;
 
 exports.team_list_get = (req, res) => {
-    Team.find().then((team) => {
-        
-        let teamList = team;
-        res.send(teamList);   
-    });
+    let list = [];
+    let i = 0;
     
-    //res.render(listTeams);
-    //res.render('listTeams.ejs', {pruebesita: "De puta madre"});
-}
+    Team.find().then((teams) => {
+        teams.forEach((team) => {
+            return new Promise((resolve, reject) => {
+                if(team.length != 0) {
+                    list[i] = {
+                        teamname : team.teamname,
+                        creator : team.creator,
+                        maxmembers : team.maxmembers,
+                        users : team.users
+                    }
+                    i = i + 1;
+                    resolve(list[i]); 
+                
+                }else {
+                    reject('Elemento vacio');
+                }
+            });
+        })
+        res.render('listTeams.ejs', {list : list} );
+    })
+    .catch((err) => {
+        if(err) throw err;
+    });
+};
 
 exports.team_create_get = (req, res) => {
     res.render('createTeam.ejs')
