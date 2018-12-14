@@ -1,4 +1,5 @@
 'use strict';
+let fetch = require('node-fetch');
 let Team = require('../../models/mongoModels/teamModel').Team;
 
 exports.team_list_get = (req, res) => {
@@ -68,10 +69,20 @@ exports.team_delete_post = (req, res) => {
 };
 
 exports.team_modify_get = (req, res) => {
-    res.send('respond with a resource');
+    
+    Team.find({teamname: req.params.nombre})
+    .then((team) => {
+        res.render('modifyTeam.ejs', {team: team});
+    })
+    .catch((err) => {
+        if(err) throw err;
+    });
+    
 };
 
 exports.team_modify_post = (req, res) => {
-    res.send('respond with a resource');
+
+    res.send(req.body);
+    
 };
 

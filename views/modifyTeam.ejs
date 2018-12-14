@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <meta charset="utf8">
+        <title>Modificación de equipo</title>
+        <link rel='stylesheet' href='/stylesheets/style.css'>
+    </head>
+    <body> 
+        <h2>Equipo <%=team[0].teamname%></h2>
+            <ul>
+                <li><strong>Nombre equipo:</strong><%=team[0].teamname%></li>
+                <li><strong>Creador del equipo:</strong><%=team[0].creator%></li>
+                <li><strong>Número de miembros del equipo:</strong><%=team[0].maxmembers%></li>
+                <li><strong>Usuarios del equipo:</strong><%=team[0].users%></li>
+            </ul>
+            <form method="POST" action='/teams/modifyTeam'>
+                <label for="maxmembers">Modificar número de miembros:</label>
+                <input type="number" name="maxmembers" id="maxmembers">
+            </br>
+                <label for="users">Modificar usuarios:</label>
+                <input type="text" name="users" id="users">
+            </br>
+
+                <input type="submit" value="Modificar equipo">
+            </form>
+    </body>
+</html>

@@ -14,6 +14,9 @@
             <li><strong>Creador del equipo:</strong><%=list[i].creator%></li>        
             <li><strong>Número de miembros del equipo:</strong><%=list[i].maxmembers%></li>   
             <li><strong>Usuarios del equipo:</strong><%=list[i].users%></li>
+            <form method="GET" action='/teams/<%=list[i].teamname%>'>
+                <input type="submit" value="Modificar equipo">
+            </form>   
             </ul>
             <%};%>
 
