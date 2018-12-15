@@ -12,15 +12,21 @@
                 <li><strong>Número de miembros del equipo:</strong><%=team[0].maxmembers%></li>
                 <li><strong>Usuarios del equipo:</strong><%=team[0].users%></li>
             </ul>
-            <form method="POST" action='/teams/modifyTeam'>
+
+            <%if(err) {%>
+                <%=err%>
+            <%}%> 
+
+            <form method="GET" action='/teams/modifyuser/<%=team[0].teamname%>'>
                 <label for="maxmembers">Modificar número de miembros:</label>
                 <input type="number" name="maxmembers" id="maxmembers">
+                <input type="submit" value="Cambiar nºusuarios">
             </br>
-                <label for="users">Modificar usuarios:</label>
+            </form>
+            <form method="GET" action='/teams/modifyusers/<%=team[0].teamname%>'>
+                <label for="users">Añadir usuario:</label>
                 <input type="text" name="users" id="users">
-            </br>
-
-                <input type="submit" value="Modificar equipo">
+                <input type="submit" value="Añadir usuario">
             </form>
     </body>
 </html>
