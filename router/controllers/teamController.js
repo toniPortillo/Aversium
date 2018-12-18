@@ -2,6 +2,7 @@
 let Team = require('../../models/mongoModels/teamModel').Team;
 let User = require('../../models/mongoModels/userModel').User;
 let deleteUserTeam = require('../middlewares/deleteUsersTeam');
+let CheckTeam = require('../middlewares/checkTeam');
 
 exports.team_list_get = (req, res) => {
     let list = [];
@@ -81,14 +82,19 @@ exports.team_modify_get = (req, res) => {
     })
     .catch((err) => {
         if(err) throw err;
-    });
-    
+    });   
 };
 
 exports.team_modify_addUser_post = (req, res) => {
-    
+    let checkTeam = new CheckTeam();
     Team.find({teamname: req.params.nombre})
     .then(team => {
+
+
+        team[0].users.forEach(item => {
+            
+        });
+
 
         User.find({username: req.body.adduser})
         .then(user => {
@@ -111,8 +117,7 @@ exports.team_modify_addUser_post = (req, res) => {
             }
 
         });
-    });
-    
+    });    
 };
 
 
@@ -151,6 +156,25 @@ exports.team_modify_deleteUser_post = (req, res) => {
     });
 };
 
-exports.team_modify_deleteUser_get = (req, res) => {
-    res.send("respond with a resource");
+exports.team_modify_membersNumber_post = (req, res) => {
+
+    Team.find({teamname: req.params.nombre})
+    .then(team => {
+        console.log(team[0].users.length);
+        console.log(req.body.membersNumber);
+        if(team[0].users.length <= req.body.membersNumber) {
+            
+            Team.findOneAndUpdate({teamname: req.params.nombre},
+                {maxmembers: req.body.membersNumber}, {new: true})
+            .then(team => {
+                res.send(team);
+            });
+
+        }else {
+            res.send("Error: Existen ya un número mayor de miembros, de los que quiere restringir");
+        }
+    })
+    .catch(err => {
+        if(err) throw err;
+    });
 };
