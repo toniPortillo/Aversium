@@ -89,45 +89,54 @@ exports.team_modify_addUser_post = (req, res) => {
     Team.find({teamname: req.params.nombre})
     .then(team => {
 
-        let checkTeam = new CheckTeam(team[0]);
-        console.log(checkTeam.availableMembers);
-        checkTeam.setProductOwner(team[0].users)
-        .then(() => {
-            console.log(checkTeam.getProductOwner());
-            return checkTeam.setScrumMaster(team[0].users);
-        })
-        .then(() => {
-            console.log(checkTeam.getScrumMaster());
-            return checkTeam.getMoreDevs();
-        })
-        .then((confirmation) => {
+        User.find({username: req.body.adduser})
+        .then(user => {
 
-            User.find({username: req.body.adduser})
-            .then(user => {
-    
-                team[0].users.push(user[0]);
-                let usersArray = team[0].users;
-    
-                if(!user) {
-                    let err = "Usuario no encontrado";
-                    res.render('modifyTeam.ejs', {
-                        team: team, 
-                        err: err
-                    });
+            //team[0].users.push(user[0]);
+            //let usersArray = team[0].users;
+            console.log(user[0]);
+            let checkTeam = new CheckTeam(team[0]);
+            console.log(checkTeam.availableMembers);
+            checkTeam.setProductOwner(team[0].users)
+            .then(() => {
+                console.log(checkTeam.getProductOwner());
+                return checkTeam.setScrumMaster(team[0].users);
+            })
+            .then(() => {
+                console.log(checkTeam.getScrumMaster());
+                console.log(checkTeam.devsMembers);
+                return checkTeam.checkFactory(user[0]);
+            })
+            .then((confirmation) => {
+                if(confirmation) {
+                
+                    res.send("Se ha añadido el usuario");
                 }else {
-                    if(confirmation === true) {
-                        Team.findOneAndUpdate({teamname: req.params.nombre},
-                            {users: usersArray}, {new: true})
-                        .then(team => {
-                            res.send(team);
-                        });
 
-                    }else {
-                        res.send("No se ha podido añadir miembro");
-                    }
+                    res.send("No se ha añadido el usuario");
                 }
-            });   
-        });
+            });
+
+            /*if(!user) {
+                let err = "Usuario no encontrado";
+                res.render('modifyTeam.ejs', {
+                    team: team, 
+                    err: err
+                });
+            }else {
+                if(confirmation === true) {
+                    Team.findOneAndUpdate({teamname: req.params.nombre},
+                        {users: usersArray}, {new: true})
+                    .then(team => {
+                        res.send(team);
+                    });
+
+                }else {
+                    res.send("No se ha podido añadir miembro");
+                }
+            }*/
+        }); 
+          
         
     });    
 };
