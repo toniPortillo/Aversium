@@ -3,7 +3,6 @@ class CheckTeam {
         this.availableMembers = team.maxmembers - team.users.length;
         this.productOwner = 0;
         this.scrumMaster = 0;
-        this.moreDevs = 0;
     }
 
     getAvailableMembers() {
@@ -15,37 +14,48 @@ class CheckTeam {
     }
 
     getScrumMaster() {
-        return this.scrumMaster;
+        return this.scrumMaster;       
     }
 
     setProductOwner(usersTeam) {
-        usersTeam.forEach(user => {
-            new Promise(resolve => {
-                if(user.role === "productoOwner") resolve(this.productOwner = 1);                
-            })
+        
+        return new Promise(resolve => {
+            usersTeam.forEach(user => {
+
+                if(user.role === 'productOwner') resolve(this.productOwner = 1);
+            });
         });
     }
 
     setScrumMaster(usersTeam) {
-        usersTeam.forEach(user => {
-            new Promise(resolve => {
-                if(user.role === "scrumMaster") resolve(this.scrumMaster = 1);
-            })
+        
+        return new Promise(resolve => {
+            usersTeam.forEach(user => {
+                
+                if(user.role === 'scrumMaster') resolve(this.scrumMaster = 1);
+            });
         });
     }
 
-    setMoreDevs(usersTeam) {
-        if(this.availableMembers = 2) {
-            if(this.getProductOwner() && this.getScrumMaster()) {
-                return true;
+    getMoreDevs() {
+        return new Promise(resolve => {
+
+            if(this.getAvailableMembers() > 0 && this.getAvailableMembers() <= 2) {
+                if(this.getProductOwner() && this.getScrumMaster()) {
+                    
+                    resolve(true);
+                }else {
+    
+                    resolve(false);
+                }
             
             }else {
-                return false;
+                
+                resolve(true);
             }
-        
-        }else {
-            return true;
-        }
+        });
     }
 
 };
+
+module.exports = CheckTeam;

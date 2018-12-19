@@ -86,37 +86,49 @@ exports.team_modify_get = (req, res) => {
 };
 
 exports.team_modify_addUser_post = (req, res) => {
-    let checkTeam = new CheckTeam();
     Team.find({teamname: req.params.nombre})
     .then(team => {
 
+        let checkTeam = new CheckTeam(team[0]);
+        console.log(checkTeam.availableMembers);
+        checkTeam.setProductOwner(team[0].users)
+        .then(() => {
+            console.log(checkTeam.getProductOwner());
+            return checkTeam.setScrumMaster(team[0].users);
+        })
+        .then(() => {
+            console.log(checkTeam.getScrumMaster());
+            return checkTeam.getMoreDevs();
+        })
+        .then((confirmation) => {
 
-        team[0].users.forEach(item => {
-            
+            User.find({username: req.body.adduser})
+            .then(user => {
+    
+                team[0].users.push(user[0]);
+                let usersArray = team[0].users;
+    
+                if(!user) {
+                    let err = "Usuario no encontrado";
+                    res.render('modifyTeam.ejs', {
+                        team: team, 
+                        err: err
+                    });
+                }else {
+                    if(confirmation === true) {
+                        Team.findOneAndUpdate({teamname: req.params.nombre},
+                            {users: usersArray}, {new: true})
+                        .then(team => {
+                            res.send(team);
+                        });
+
+                    }else {
+                        res.send("No se ha podido añadir miembro");
+                    }
+                }
+            });   
         });
-
-
-        User.find({username: req.body.adduser})
-        .then(user => {
-
-            team[0].users.push(user[0]);
-            let usersArray = team[0].users;
-
-            if(!user) {
-                let err = "Usuario no encontrado";
-                res.render('modifyTeam.ejs', {
-                    team: team, 
-                    err: err
-                });
-            }else {
-                Team.findOneAndUpdate({teamname: req.params.nombre},
-                    {users: usersArray}, {new: true})
-                .then(team => {
-                    res.send(team);
-                });
-            }
-
-        });
+        
     });    
 };
 
