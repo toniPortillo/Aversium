@@ -1,9 +1,9 @@
 class CheckTeam {
     constructor(team) {
         this.availableMembers = team.maxmembers - team.users.length;
-        this.productOwner = false;
-        this.scrumMaster = false;
-        this.devsMembers = this.availableMembers - 2;
+        this.productOwner = 0;
+        this.scrumMaster = 0;
+        this.availableDevelopers = this.availableMembers - 2;
     }
 
     getAvailableMembers() {
@@ -18,21 +18,24 @@ class CheckTeam {
         return this.scrumMaster;       
     }
 
-    getDevsMembers() {
-        return this.devsMembers;
+    getAvailableMembers() {
+        return this.availableDevelopers;
     }
 
     setProductOwner(usersTeam) {
-        
         return new Promise(resolve => {
+            if(usersTeam.length === 0) resolve(this.productOwner = this.productOwner);
+            
             usersTeam.forEach(user => {
-
                 if(user.role === 'productOwner') {
-                    
-                    resolve(this.productOwner = true);
+
+                    this.availableDevelopers = this.availableDevelopers + 1;
+                    resolve(this.productOwner = 1);
+                }else {
+
+                    resolve(this.productOwner = this.productOwner);
                 }
 
-                resolve(this.productOwner = false);
             });
         });
     }
@@ -40,56 +43,63 @@ class CheckTeam {
     setScrumMaster(usersTeam) {
         
         return new Promise(resolve => {
-            usersTeam.forEach(user => {
-                
+            if(usersTeam.length === 0) resolve(this.scrumMaster = this.scrumMaster);
+            
+            usersTeam.forEach(user => { 
                 if(user.role === 'scrumMaster') {
+                
+                    this.availableDevelopers = this.availableDevelopers + 1;
+                    resolve(this.scrumMaster = 1);
+                }else {
 
-                    resolve(this.scrumMaster = true);
-                } 
-
-                resolve(this.scrumMaster = false);
+                    resolve(this.scrumMaster = this.scrumMaster);
+                }
+                
             });
         });
     }
 
     newProductOwner(resolve) {
-        
-            if(this.getAvailableMembers > 0 && this.getProductOwner() != true) {
-                
-                resolve (true);
-            };
+        if(this.availableMembers > 0 && this.productOwner === 0) {
+            
+            resolve (true);
+        }else {
             
             resolve(false);
+        }
     }
-
-    newScrumMaster(resolve) {
     
-            if(this.getAvailableMembers > 0 && this.getScrumMaster() != true) {
-                
+    newScrumMaster(resolve) {
+            if(this.availableMembers > 0 && this.scrumMaster === 0) {
+ 
                 resolve (true);
+            }else {
+                
+                resolve(false);
             }
 
-            resolve(false);
     }
 
     newDeveloper(resolve) {
 
-            if(this.getDevsMembers > 0) {
+            if(this.availableDevelopers > 0) {
             
                 resolve(true);
+            }else {
+
+                resolve(false);
             }
 
-            resolve(false);
     }
 
     checkFactory(user) {
-        console.log(user.role);
+        
         return new Promise(resolve => {
             if(user.role === 'productOwner') {
             
                 this.newProductOwner(resolve);
             }else if(user.role === 'scrumMaster') {
-                
+
                 this.newScrumMaster(resolve);
             }else if(user.role === 'developer') {
 

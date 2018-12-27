@@ -92,52 +92,52 @@ exports.team_modify_addUser_post = (req, res) => {
         User.find({username: req.body.adduser})
         .then(user => {
 
-            //team[0].users.push(user[0]);
-            //let usersArray = team[0].users;
-            console.log(user[0]);
+            
             let checkTeam = new CheckTeam(team[0]);
-            console.log(checkTeam.availableMembers);
+            
             checkTeam.setProductOwner(team[0].users)
             .then(() => {
-                console.log(checkTeam.getProductOwner());
                 return checkTeam.setScrumMaster(team[0].users);
+                
             })
             .then(() => {
-                console.log(checkTeam.getScrumMaster());
-                console.log(checkTeam.devsMembers);
                 return checkTeam.checkFactory(user[0]);
-            })
-            .then((confirmation) => {
-                if(confirmation) {
                 
-                    res.send("Se ha añadido el usuario");
+            })
+            .then(confirmation => {
+                team[0].users.push(user[0]);
+                let usersArray = team[0].users;
+                console.log("availableDevelopers:" + checkTeam.availableDevelopers);
+                console.log("availableMembers:" + checkTeam.availableMembers);
+               
+                if(confirmation === true) {
+                    if(!user) {
+                        let err = "Usuario no encontrado";
+                        res.render('modifyTeam.ejs', {
+                            team: team, 
+                            err: err
+                        });
+
+                    }else {
+                        Team.findOneAndUpdate({teamname: team[0].teamname},
+                            {users: usersArray}, {new: true})
+                        .then(team => {
+                            res.send(team);
+                        });
+                        
+                    }    
                 }else {
 
                     res.send("No se ha añadido el usuario");
                 }
             });
-
-            /*if(!user) {
-                let err = "Usuario no encontrado";
-                res.render('modifyTeam.ejs', {
-                    team: team, 
-                    err: err
-                });
-            }else {
-                if(confirmation === true) {
-                    Team.findOneAndUpdate({teamname: req.params.nombre},
-                        {users: usersArray}, {new: true})
-                    .then(team => {
-                        res.send(team);
-                    });
-
-                }else {
-                    res.send("No se ha podido añadir miembro");
-                }
-            }*/
-        }); 
-          
-        
+        })
+        .catch(err => {
+            if(err) throw err;
+        });       
+    })
+    .catch(err => {
+        if(err) throw err;
     });    
 };
 
