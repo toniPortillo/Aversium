@@ -7,10 +7,13 @@ let CheckTeam = require('../middlewares/checkTeam');
 exports.team_list_get = (req, res) => {
     let list = [];
     let i = 0;
+    let allPromises = [];
     
-    Team.find().then((teams) => {
+    Team.find()
+    .then((teams) => {
+        console.log(teams.length);
         teams.forEach((team) => {
-            return new Promise((resolve, reject) => {
+            allPromises[i] = new Promise((resolve, reject) => {
                 if(team.length != 0) {
                     list[i] = {
                         teamname : team.teamname,
@@ -20,13 +23,15 @@ exports.team_list_get = (req, res) => {
                     }
                     i = i + 1;
                     resolve(list[i]); 
-                
-                }else {
-                    reject('Elemento vacio');
                 }
             });
-        })
-        res.render('listTeams.ejs', {list : list} );
+        });
+
+        Promise.all(allPromises)
+        .then(() => {
+
+            res.render('listTeams.ejs', {list : list});
+        });
     })
     .catch((err) => {
         if(err) throw err;
@@ -72,12 +77,10 @@ exports.team_delete_post = (req, res) => {
 
 exports.team_modify_get = (req, res) => {
     
-    let err = "";
     Team.find({teamname: req.params.nombre})
     .then((team) => {
         res.render('modifyTeam.ejs', {
             team: team,
-            err: err
         });
     })
     .catch((err) => {
@@ -89,7 +92,7 @@ exports.team_modify_addUser_post = (req, res) => {
     Team.find({teamname: req.params.nombre})
     .then(team => {
 
-        User.find({username: req.body.adduser})
+        User.find({email: req.body.adduser})
         .then(user => {
 
             
@@ -107,29 +110,24 @@ exports.team_modify_addUser_post = (req, res) => {
             .then(confirmation => {
                 team[0].users.push(user[0]);
                 let usersArray = team[0].users;
-                console.log("availableDevelopers:" + checkTeam.availableDevelopers);
-                console.log("availableMembers:" + checkTeam.availableMembers);
-               
+                
                 if(confirmation === true) {
-                    if(!user) {
-                        let err = "Usuario no encontrado";
-                        res.render('modifyTeam.ejs', {
-                            team: team, 
-                            err: err
-                        });
 
-                    }else {
-                        Team.findOneAndUpdate({teamname: team[0].teamname},
-                            {users: usersArray}, {new: true})
-                        .then(team => {
-                            res.send(team);
-                        });
-                        
-                    }    
+                    Team.findOneAndUpdate({teamname: team[0].teamname},
+                        {users: usersArray}, {new: true})
+                    .then(team => {
+                        res.send(team);
+                    })
+                    .catch(err => {
+                        if(err) throw err;
+                    });  
                 }else {
 
                     res.send("No se ha añadido el usuario");
                 }
+            })
+            .catch(err => {
+                res.send(err);
             });
         })
         .catch(err => {

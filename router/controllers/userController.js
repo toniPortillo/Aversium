@@ -10,20 +10,24 @@ exports.user_register_get = function(req, res) {
 
 exports.user_register_post = function(req, res) {
 
-    User.find({username: req.body.username}).then((user) => {
-        //if(err) throw err;
-        console.log(user.length);
+    User.find({email: req.body.email})
+    .then((user) => {
+        
         if(user.length === 0){
+            
             let saveUser = new User({
                 username: req.body.username,
+                email: req.body.email,
                 password: req.body.password,
                 role: req.body.role
             });
             encryptor(saveUser, res);
         }else {
+
             res.send("Usuario no disponible" + user);
         }
     }).catch((err) => {
+       
         if(err) throw err;
     });
 };
@@ -34,20 +38,21 @@ exports.user_login_get = function(req, res) {
 };
 
 exports.user_login_post = function(req, res) {
-
-    User.find({username: req.body.username})
+    console.log(req.body.email);
+    User.find({email: req.body.email})
     .then((user) => {
         
-        console.log(user[0].password);
+        console.log(user[0]);
         if(user.length === 1) {
 
             comparePassword(req.body.password, user, res);
         }else {
-            res.send('Error al introducir el nombre de usuario');
+
+            res.send('Error al introducir email de usuario');
         }
     })
     .catch((err) => {
-        if(err) throw err;
         
+        if(err) throw err;  
     });
 };

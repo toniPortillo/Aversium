@@ -7,6 +7,7 @@ const userSchemas = {
     
     user: new Schema({
         username: {type: String},
+        email: {type: String},
         password: {type: String},
         role: {type: String}
     })

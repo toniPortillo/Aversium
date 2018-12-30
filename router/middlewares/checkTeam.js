@@ -31,12 +31,10 @@ class CheckTeam {
 
                     this.availableDevelopers = this.availableDevelopers + 1;
                     resolve(this.productOwner = 1);
-                }else {
-
-                    resolve(this.productOwner = this.productOwner);
-                }
-
+                }                
             });
+        
+            resolve(this.productOwner = this.productOwner);
         });
     }
 
@@ -50,12 +48,12 @@ class CheckTeam {
                 
                     this.availableDevelopers = this.availableDevelopers + 1;
                     resolve(this.scrumMaster = 1);
-                }else {
-
-                    resolve(this.scrumMaster = this.scrumMaster);
                 }
+
                 
             });
+            
+            resolve(this.scrumMaster = this.scrumMaster);
         });
     }
 
@@ -94,19 +92,24 @@ class CheckTeam {
 
     checkFactory(user) {
         
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
+            if(user === undefined) {
+                let err = "El usuario no existe";
+                reject(err);
+            }
+
             if(user.role === 'productOwner') {
-            
+                
                 this.newProductOwner(resolve);
             }else if(user.role === 'scrumMaster') {
-
+                
                 this.newScrumMaster(resolve);
             }else if(user.role === 'developer') {
-
+                
                 this.newDeveloper(resolve);
             }else {
-                
-                resolve(false);
+                let err = "Error: no es ningún rol permitido"
+                reject(err);
             }
         });
 
