@@ -2,14 +2,21 @@
 
 let deleteUsersTeam = (users, user) => {
     let userArray = [];
-    users.forEach((item) => {
-        return new Promise((resolve) => {
-            if(item.username !== user.username) {
-                resolve(userArray.push(item));
+    return new Promise(resolve => {
+        if(user === undefined) {
+            let err = "El usuario no existe";
+            reject(err);
+        }
+        users.forEach((item) => {
+       
+            if(item.email !== user.email) {
+       
+                userArray.push(item);
             }
         });
+       
+        resolve(userArray);
     });
-    return userArray;
 };
 
 module.exports = deleteUsersTeam;

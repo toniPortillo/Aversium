@@ -20,12 +20,12 @@
             </form>
             <form method="POST" action='/teams/addUser/<%=team[0].teamname%>'>
                 <label for="adduser">Añadir miembro:</label>
-                <input type="text" name="adduser" id="adduser">
+                <input type="email" name="adduser" id="adduser">
                 <input type="submit" value="Añadir miembro">
             </form>
             <form method="POST" action='/teams/deleteUser/<%=team[0].teamname%>'>
                 <label for="deleteuser">Borrar miembro:</label>
-                <input type="text" name="deleteuser" id="deleteuser">
+                <input type="email" name="deleteuser" id="deleteuser">
                 <input type="submit" value="Borrar miembro">
             </form>
     </body>

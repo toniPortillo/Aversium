@@ -11,7 +11,6 @@ exports.team_list_get = (req, res) => {
     
     Team.find()
     .then((teams) => {
-        console.log(teams.length);
         teams.forEach((team) => {
             allPromises[i] = new Promise((resolve, reject) => {
                 if(team.length != 0) {
@@ -115,8 +114,8 @@ exports.team_modify_addUser_post = (req, res) => {
 
                     Team.findOneAndUpdate({teamname: team[0].teamname},
                         {users: usersArray}, {new: true})
-                    .then(team => {
-                        res.send(team);
+                    .then(item => {
+                        res.send(item);
                     })
                     .catch(err => {
                         if(err) throw err;
@@ -127,7 +126,10 @@ exports.team_modify_addUser_post = (req, res) => {
                 }
             })
             .catch(err => {
-                res.send(err);
+                console.log(err)
+                res.render('modifyTeam.ejs', {
+                    team: team
+                });
             });
         })
         .catch(err => {
@@ -144,27 +146,29 @@ exports.team_modify_deleteUser_post = (req, res) => {
     Team.find({teamname: req.params.nombre})
     .then(team => {
 
-        User.find({username: req.body.deleteuser})
+        User.find({email: req.body.deleteuser})
         .then(user => {
-            console.log(user[0]);
+            
             let usersArray = team[0].users;
-            let usersTeam = deleteUserTeam(usersArray, user[0]);
-            console.log(usersArray);
-            console.log(usersTeam);
-
-            if(!user) {
-                let err = "Usuario no encontrado";
+            
+            deleteUserTeam(usersArray, user[0])
+            .then(usersTeam => {
+                Team.findOneAndUpdate({teamname: team[0].teamname},
+                    {users: usersTeam}, {new: true})
+                .then(item => {
+                    res.send(item);
+                })
+                .catch(err => {
+                    if(err) throw err;
+                });
+            })
+            .catch(err => {
+                console.log(err);
                 res.render('modifyTeam.ejs', {
                     team: team,
                     err: err
                 });
-            }else {
-                Team.findOneAndUpdate({teamname: req.params.nombre},
-                    {users: usersTeam}, {new: true})
-                .then(team => {
-                    res.send(team);
-                });
-            }
+            });
         })
         .catch(err => {
             if(err) throw err;
@@ -179,14 +183,16 @@ exports.team_modify_membersNumber_post = (req, res) => {
 
     Team.find({teamname: req.params.nombre})
     .then(team => {
-        console.log(team[0].users.length);
-        console.log(req.body.membersNumber);
+
         if(team[0].users.length <= req.body.membersNumber) {
             
-            Team.findOneAndUpdate({teamname: req.params.nombre},
+            Team.findOneAndUpdate({teamname: team[0].teamname},
                 {maxmembers: req.body.membersNumber}, {new: true})
-            .then(team => {
-                res.send(team);
+            .then(item => {
+                res.send(item);
+            })
+            .catch(err => {
+                if(err) throw err
             });
 
         }else {
