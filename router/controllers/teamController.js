@@ -71,7 +71,20 @@ exports.team_delete_get = (req, res) => {
 };
 
 exports.team_delete_post = (req, res) => {
-    res.send('respond with a resource');
+    Team.find({teamname: req.params.nombre})
+    .then(team => {
+
+        if(!team) res.send("Error en el borrado del equipo");
+        Team.remove({teamname: team[0].teamname})
+        .then(() => {
+
+            res.send("Equipo borrado");
+        });
+    })
+    .catch(err => {
+
+        if(err) throw err;
+    });
 };
 
 exports.team_modify_get = (req, res) => {

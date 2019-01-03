@@ -16,7 +16,10 @@
             <li><strong>Usuarios del equipo:</strong><%=list[i].users%></li>
             <form method="GET" action='/teams/<%=list[i].teamname%>'>
                 <input type="submit" value="Modificar equipo">
-            </form>   
+            </form> 
+            <form method="POST" action='/teams/<%=list[i].teamname%>'>
+                <input type="submit" value="Borrar equipo">
+            </form>
             </ul>
             <%};%>
 
