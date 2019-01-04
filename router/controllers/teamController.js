@@ -91,8 +91,9 @@ exports.team_modify_get = (req, res) => {
     
     Team.find({teamname: req.params.nombre})
     .then((team) => {
+    
         res.render('modifyTeam.ejs', {
-            team: team,
+            team: team[0]
         });
     })
     .catch((err) => {
@@ -102,17 +103,16 @@ exports.team_modify_get = (req, res) => {
 
 exports.team_modify_addUser_post = (req, res) => {
     Team.find({teamname: req.params.nombre})
-    .then(team => {
-
+    .then(baseteam => {
         User.find({email: req.body.adduser})
         .then(user => {
 
             
-            let checkTeam = new CheckTeam(team[0]);
+            let checkTeam = new CheckTeam(baseteam[0]);
             
-            checkTeam.setProductOwner(team[0].users)
+            checkTeam.setProductOwner(baseteam[0].users)
             .then(() => {
-                return checkTeam.setScrumMaster(team[0].users);
+                return checkTeam.setScrumMaster(baseteam[0].users);
                 
             })
             .then(() => {
@@ -120,19 +120,23 @@ exports.team_modify_addUser_post = (req, res) => {
                 
             })
             .then(confirmation => {
-                team[0].users.push(user[0]);
-                let usersArray = team[0].users;
+                baseteam[0].users.push(user[0]);
+                let usersArray = baseteam[0].users;
                 
                 if(confirmation === true) {
 
-                    Team.findOneAndUpdate({teamname: team[0].teamname},
+                    Team.findOneAndUpdate({teamname: baseteam[0].teamname},
                         {users: usersArray}, {new: true})
-                    .then(item => {
-                        res.send(item);
+                    .then(team => {
+                        console.log(team);
+                        res.render('modifyTeam.ejs', {
+                            team: team
+                        });
                     })
                     .catch(err => {
                         if(err) throw err;
                     });  
+
                 }else {
 
                     res.send("No se ha añadido el usuario");
@@ -141,7 +145,7 @@ exports.team_modify_addUser_post = (req, res) => {
             .catch(err => {
                 console.log(err)
                 res.render('modifyTeam.ejs', {
-                    team: team
+                    team: baseteam[0]
                 });
             });
         })
@@ -157,19 +161,22 @@ exports.team_modify_addUser_post = (req, res) => {
 
 exports.team_modify_deleteUser_post = (req, res) => {
     Team.find({teamname: req.params.nombre})
-    .then(team => {
+    .then(baseteam => {
 
         User.find({email: req.body.deleteuser})
         .then(user => {
             
-            let usersArray = team[0].users;
+            let usersArray = baseteam[0].users;
             
             deleteUserTeam(usersArray, user[0])
             .then(usersTeam => {
-                Team.findOneAndUpdate({teamname: team[0].teamname},
+                Team.findOneAndUpdate({teamname: baseteam[0].teamname},
                     {users: usersTeam}, {new: true})
-                .then(item => {
-                    res.send(item);
+                .then(team => {
+                    console.log(team);
+                    res.render('modifyTeam.ejs', {
+                        team: team
+                    });
                 })
                 .catch(err => {
                     if(err) throw err;
@@ -178,8 +185,7 @@ exports.team_modify_deleteUser_post = (req, res) => {
             .catch(err => {
                 console.log(err);
                 res.render('modifyTeam.ejs', {
-                    team: team,
-                    err: err
+                    team: baseteam[0]
                 });
             });
         })

@@ -5,25 +5,25 @@
         <link rel='stylesheet' href='/stylesheets/style.css'>
     </head>
     <body> 
-        <h2>Equipo <%=team[0].teamname%></h2>
+        <h2>Equipo <%=team.teamname%></h2>
             <ul>
-                <li><strong>Nombre equipo:</strong><%=team[0].teamname%></li>
-                <li><strong>Creador del equipo:</strong><%=team[0].creator%></li>
-                <li><strong>Número de miembros del equipo:</strong><%=team[0].maxmembers%></li>
-                <li><strong>Usuarios del equipo:</strong><%=team[0].users%></li>
+                <li><strong>Nombre equipo:</strong><%=team.teamname%></li>
+                <li><strong>Creador del equipo:</strong><%=team.creator%></li>
+                <li><strong>Número de miembros del equipo:</strong><%=team.maxmembers%></li>
+                <li><strong>Usuarios del equipo:</strong><%=team.users%></li>
             </ul>
             
-            <form method="POST" action='/teams/membersNumber/<%=team[0].teamname%>'>
+            <form method="POST" action='/teams/membersNumber/<%=team.teamname%>'>
                 <label for="membersNumber">Modificar número de miembros:</label>
                 <input type="number" name="membersNumber" id="membersNumber">
                 <input type="submit" value="Cambiar nºmiembros">
             </form>
-            <form method="POST" action='/teams/addUser/<%=team[0].teamname%>'>
+            <form method="POST" action='/teams/addUser/<%=team.teamname%>'>
                 <label for="adduser">Añadir miembro:</label>
                 <input type="email" name="adduser" id="adduser">
                 <input type="submit" value="Añadir miembro">
             </form>
-            <form method="POST" action='/teams/deleteUser/<%=team[0].teamname%>'>
+            <form method="POST" action='/teams/deleteUser/<%=team.teamname%>'>
                 <label for="deleteuser">Borrar miembro:</label>
                 <input type="email" name="deleteuser" id="deleteuser">
                 <input type="submit" value="Borrar miembro">

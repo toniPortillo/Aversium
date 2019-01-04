@@ -14,8 +14,11 @@ router.get('/:nombre', team_controllers.team_modify_get);
 router.post('/:nombre', team_controllers.team_delete_post);
 
 router.post('/addUser/:nombre', team_controllers.team_modify_addUser_post);
-router.post('/deleteUser/:nombre', team_controllers.team_modify_deleteUser_post);
+//router.post('/deleteUser/:nombre', team_controllers.team_modify_deleteUser_post);
 router.post('/membersNumber/:nombre', team_controllers.team_modify_membersNumber_post);
 
+router.route('/deleteUser/:nombre')
+.post(team_controllers.team_modify_deleteUser_post)
+.get(team_controllers.team_list_get);
 
 module.exports = router;
