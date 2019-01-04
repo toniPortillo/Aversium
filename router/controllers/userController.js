@@ -5,7 +5,7 @@ let comparePassword = require('../middlewares/comparePassword');
 
 exports.user_register_get = function(req, res) {
 
-    res.render('register.ejs');
+    res.render('users/register.ejs');
 };
 
 exports.user_register_post = function(req, res) {
@@ -34,7 +34,7 @@ exports.user_register_post = function(req, res) {
 
 exports.user_login_get = function(req, res) {
 
-    res.render('login.ejs');
+    res.render('users/login.ejs');
 };
 
 exports.user_login_post = function(req, res) {

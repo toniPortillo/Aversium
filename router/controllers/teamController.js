@@ -11,6 +11,7 @@ exports.team_list_get = (req, res) => {
     
     Team.find()
     .then((teams) => {
+
         teams.forEach((team) => {
             allPromises[i] = new Promise((resolve, reject) => {
                 if(team.length != 0) {
@@ -29,44 +30,62 @@ exports.team_list_get = (req, res) => {
         Promise.all(allPromises)
         .then(() => {
 
-            res.render('listTeams.ejs', {list : list});
+            res.render('teams/listTeams.ejs', {
+                list : list});
         });
     })
     .catch((err) => {
+
         if(err) throw err;
     });
 };
 
 exports.team_create_get = (req, res) => {
-    res.render('createTeam.ejs')
+
+    res.render('teams/createTeam.ejs');
 };
 
 exports.team_create_post = (req, res) => {
 
-    if(req.body.teamname.length != 0 && req.body.creator.length !=0 &&
-        req.body.maxmembers.length !=0) {
+    if(req.body.teamname.length != 0 && req.body.creator.length != 0 &&
+        req.body.maxmembers.length != 0) {
 
-            Team.find({teamname: req.body.teamname}).then((team) => {
+            Team.find({teamname: req.body.teamname})
+            .then((team) => {
+
                 if(team.length === 0) {
+                    let greatherThanCero = req.body.maxmembers;
+
+                    if(req.body.maxmembers < 1) {
+                        greatherThanCero = 1;
+                    }
+
                     let saveTeam = new Team({
                         teamname: req.body.teamname,
                         creator: req.body.creator,
-                        maxmembers: req.body.maxmembers,
+                        maxmembers: greatherThanCero,
                         users: req.body.users
                     });
                     saveTeam.save();
                     res.send(saveTeam + "Equipo creado");
                 
                 }else {
+
                     res.send("Equipo no disponible");
                 }
             }).catch((err) => {
+
                 if(err) throw err;   
             });
+    
+    }else {
+
+        res.render('teams/createTeam.ejs');
     }
 };
 
 exports.team_delete_get = (req, res) => {
+
     res.send('respond with a resource');
 };
 
@@ -92,11 +111,13 @@ exports.team_modify_get = (req, res) => {
     Team.find({teamname: req.params.nombre})
     .then((team) => {
     
-        res.render('modifyTeam.ejs', {
-            team: team[0]
+        res.render('teams/modifyTeam.ejs', {
+            team: team[0],
+            err: ""
         });
     })
     .catch((err) => {
+
         if(err) throw err;
     });   
 };
@@ -104,22 +125,23 @@ exports.team_modify_get = (req, res) => {
 exports.team_modify_addUser_post = (req, res) => {
     Team.find({teamname: req.params.nombre})
     .then(baseteam => {
+
         User.find({email: req.body.adduser})
         .then(user => {
 
-            
             let checkTeam = new CheckTeam(baseteam[0]);
             
             checkTeam.setProductOwner(baseteam[0].users)
             .then(() => {
-                return checkTeam.setScrumMaster(baseteam[0].users);
-                
+
+                return checkTeam.setScrumMaster(baseteam[0].users);  
             })
             .then(() => {
+
                 return checkTeam.checkFactory(user[0]);
-                
             })
             .then(confirmation => {
+
                 baseteam[0].users.push(user[0]);
                 let usersArray = baseteam[0].users;
                 
@@ -128,12 +150,14 @@ exports.team_modify_addUser_post = (req, res) => {
                     Team.findOneAndUpdate({teamname: baseteam[0].teamname},
                         {users: usersArray}, {new: true})
                     .then(team => {
-                        console.log(team);
-                        res.render('modifyTeam.ejs', {
-                            team: team
+                        
+                        res.render('teams/modifyTeam.ejs', {
+                            team: team,
+                            err: ""
                         });
                     })
                     .catch(err => {
+
                         if(err) throw err;
                     });  
 
@@ -143,17 +167,20 @@ exports.team_modify_addUser_post = (req, res) => {
                 }
             })
             .catch(err => {
-                console.log(err)
-                res.render('modifyTeam.ejs', {
-                    team: baseteam[0]
+                
+                res.render('teams/modifyTeam.ejs', {
+                    team: baseteam[0],
+                    err: "El usuario introducido para ser añadido al equipo, no existe"
                 });
             });
         })
         .catch(err => {
+
             if(err) throw err;
         });       
     })
     .catch(err => {
+
         if(err) throw err;
     });    
 };
@@ -170,30 +197,36 @@ exports.team_modify_deleteUser_post = (req, res) => {
             
             deleteUserTeam(usersArray, user[0])
             .then(usersTeam => {
+
                 Team.findOneAndUpdate({teamname: baseteam[0].teamname},
                     {users: usersTeam}, {new: true})
                 .then(team => {
-                    console.log(team);
-                    res.render('modifyTeam.ejs', {
-                        team: team
+                    
+                    res.render('teams/modifyTeam.ejs', {
+                        team: team,
+                        err: ""
                     });
                 })
                 .catch(err => {
+
                     if(err) throw err;
                 });
             })
             .catch(err => {
-                console.log(err);
-                res.render('modifyTeam.ejs', {
-                    team: baseteam[0]
+
+                res.render('teams/modifyTeam.ejs', {
+                    team: baseteam[0],
+                    err: "El usuario introducido para ser eliminado del equipo, no existe"
                 });
             });
         })
         .catch(err => {
+
             if(err) throw err;
         })
     })
     .catch(err => {
+
         if(err) throw err;
     });
 };
@@ -201,24 +234,41 @@ exports.team_modify_deleteUser_post = (req, res) => {
 exports.team_modify_membersNumber_post = (req, res) => {
 
     Team.find({teamname: req.params.nombre})
-    .then(team => {
-
-        if(team[0].users.length <= req.body.membersNumber) {
+    .then(baseteam => {
+       
+        if(req.body.membersNumber.length === 0 || req.body.membersNumber === "0") {
             
-            Team.findOneAndUpdate({teamname: team[0].teamname},
+            res.render('teams/modifyTeam.ejs', {
+                team: baseteam[0],
+                err: "El número introducido no es válido"
+            })
+
+        }else if(baseteam[0].users.length <= req.body.membersNumber) {
+            
+            Team.findOneAndUpdate({teamname: baseteam[0].teamname},
                 {maxmembers: req.body.membersNumber}, {new: true})
-            .then(item => {
-                res.send(item);
+            .then(team => {
+
+                res.render('teams/modifyTeam.ejs', {
+                    team: team,
+                    err: ""
+                });
             })
             .catch(err => {
-                if(err) throw err
+
+                if(err) throw err;
             });
 
         }else {
-            res.send("Error: Existen ya un número mayor de miembros, de los que quiere restringir");
+
+            res.render('teams/modifyTeam.ejs', {
+                team: baseteam[0],
+                err: "Error: Existen ya un número mayor de miembros, de los que quiere restringir"
+            });
         }
     })
     .catch(err => {
+
         if(err) throw err;
     });
 };
