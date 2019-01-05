@@ -47,7 +47,9 @@ exports.team_show_get = (req, res) => {
     .then(baseteam => {
 
         res.render('teams/showTeam.ejs', {
-            team: baseteam[0]
+            team: baseteam[0],
+            operation: "",
+            err: ""
         })
     })
     .catch(err => {
@@ -58,7 +60,9 @@ exports.team_show_get = (req, res) => {
 
 exports.team_create_get = (req, res) => {
 
-    res.render('teams/createTeam.ejs');
+    res.render('teams/createTeam.ejs', {
+        err: ""
+    });
 };
 
 exports.team_create_post = (req, res) => {
@@ -85,21 +89,29 @@ exports.team_create_post = (req, res) => {
 
                     saveTeam.save()
                     .then(team => {
-
-                        console.log(team);
-                        res.send(saveTeam + "Equipo creado");
+            
+                        res.render('teams/showTeam.ejs', {
+                            team: team,
+                            operation: "Equipo creado",
+                            err: ""
+                        });
                     });
                 }else {
-
-                    res.send("Equipo no disponible");
+                    let err = "Equipo no disponible";
+                    res.render('teams/createTeam.ejs', {
+                        err: err
+                    });
                 }
             }).catch((err) => {
 
                 if(err) throw err;   
             });
     }else {
-
-        res.render('teams/createTeam.ejs');
+        
+        let err = "Dejo algún campo requerido, vacio"
+        res.render('teams/createTeam.ejs', {
+            err: err
+        });
     }
 };
 
@@ -111,13 +123,24 @@ exports.team_delete_get = (req, res) => {
 exports.team_delete_post = (req, res) => {
 
     Team.find({teamname: req.params.nombre})
-    .then(team => {
+    .then(baseteam => {
 
-        if(!team) res.send("Error en el borrado del equipo");
-        Team.remove({teamname: team[0].teamname})
-        .then(() => {
+        if(!baseteam) {
+            
+            res.render('teams/showTeam.ejs', {
+                team: [],
+                err: "Error en el borrado del equipo",
+                operation: ""
+            });
+        }
+        Team.remove({teamname: baseteam[0].teamname})
+        .then(team => {
 
-            res.send("Equipo borrado");
+            res.render('teams/showTeam.ejs', {
+                team: team,
+                err: "",
+                operation: "Equipo eliminado"
+            });
         });
     })
     .catch(err => {
@@ -162,12 +185,12 @@ exports.team_modify_addUser_post = (req, res) => {
                 return checkTeam.checkFactory(user[0]);
             })
             .then(confirmation => {
-
-                baseteam[0].users.push(user[0]);
-                let usersArray = baseteam[0].users;
                 
                 if(confirmation === true) {
-
+                    
+                    baseteam[0].users.push(user[0]);
+                    let usersArray = baseteam[0].users;
+                    
                     Team.findOneAndUpdate({teamname: baseteam[0].teamname},
                         {users: usersArray}, {new: true})
                     .then(team => {
@@ -183,7 +206,10 @@ exports.team_modify_addUser_post = (req, res) => {
                     });  
                 }else {
 
-                    res.send("No se ha añadido el usuario");
+                    res.render('teams/modifyTeam.ejs', {
+                        team: baseteam[0],
+                        err: "No se ha añadido el usuario"
+                    });
                 }
             })
             .catch(err => {

@@ -6,13 +6,25 @@
     </head>
     <body>
         <h2>Equipo <%=team.teamname%></h2>
+            
+            <%if(err.length != 0) {%>
+                
+                <br>
+                <strong><%=err%></strong>
+                <br>
+            <%}%>
+            <%if(operation.length != 0) {%>
+
+                <br>
+                <strong><%=operation%></strong>
+                <br>
+            <%}%>
             <ul>
                 <li><strong>Nombre equipo:</strong><%=team.teamname%></li>
                 <li><strong>Creador del equipo:</strong><%=team.creator%></li>
                 <li><strong>Número de miembros del equipo:</strong><%=team.maxmembers%></li>
                 <li><strong>Usuarios del equipo:</strong><%=team.users%></li>
             </ul>
-            <br>
 
             <form method="GET" action='/teams'>
                 <input type="submit" value="Volver a la lista">

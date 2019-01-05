@@ -12,12 +12,13 @@
                 <li><strong>Número de miembros del equipo:</strong><%=team.maxmembers%></li>
                 <li><strong>Usuarios del equipo:</strong><%=team.users%></li>
             </ul>
-            <br>
             
             <%if(err.length != 0) {%>
-                <%=err%>
+                
+                <br>
+                <strong><%=err%></strong>
+                <br>
             <%}%>
-            <br>
             <br>
             <form method="POST" action='/teams/membersNumber/<%=team.teamname%>'>
                 <label for="membersNumber">Modificar número de miembros:</label>

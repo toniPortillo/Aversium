@@ -7,10 +7,10 @@ let team_controllers = require('./controllers/teamController');
 
 router.get('/', team_controllers.team_list_get);
 
-router.get('/:nombre',team_controllers.team_show_get);
-
 router.get('/createTeam', team_controllers.team_create_get);
 router.post('/createTeam', team_controllers.team_create_post);
+
+router.get('/:nombre',team_controllers.team_show_get);
 
 router.get('/modifyTeam/:nombre', team_controllers.team_modify_get);
 router.post('/modifyTeam/:nombre', team_controllers.team_delete_post);

@@ -7,6 +7,13 @@
     <body>
         <h2>Creación de equipo: </h2>
         <p>Introduzca sus datos: </p>
+        
+        <%if(err.length != 0) {%>
+            
+            <br>
+            <strong><%=err%></strong>
+            <br>
+        <%}%>
         <form method="POST" action="/teams/createTeam">
             <p>
                 <label for="teamname">Nombre del equipo:</label>
