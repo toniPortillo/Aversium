@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <meta charset="utf8">
+        <title>Características del equipo</title>
+        <link rel='stylesheet' href='/stylesheets/style.css'>
+    </head>
+    <body>
+        <h2>Equipo <%=team.teamname%></h2>
+            <ul>
+                <li><strong>Nombre equipo:</strong><%=team.teamname%></li>
+                <li><strong>Creador del equipo:</strong><%=team.creator%></li>
+                <li><strong>Número de miembros del equipo:</strong><%=team.maxmembers%></li>
+                <li><strong>Usuarios del equipo:</strong><%=team.users%></li>
+            </ul>
+            <br>
+
+            <form method="GET" action='/teams'>
+                <input type="submit" value="Volver a la lista">
+            </form>
+    </body>
+</html>

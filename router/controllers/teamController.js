@@ -5,6 +5,7 @@ let deleteUserTeam = require('../middlewares/deleteUsersTeam');
 let CheckTeam = require('../middlewares/checkTeam');
 
 exports.team_list_get = (req, res) => {
+
     let list = [];
     let i = 0;
     let allPromises = [];
@@ -40,6 +41,21 @@ exports.team_list_get = (req, res) => {
     });
 };
 
+exports.team_show_get = (req, res) => {
+    
+    Team.find({teamname: req.params.nombre})
+    .then(baseteam => {
+
+        res.render('teams/showTeam.ejs', {
+            team: baseteam[0]
+        })
+    })
+    .catch(err => {
+
+        if(err) throw err;
+    });
+};
+
 exports.team_create_get = (req, res) => {
 
     res.render('teams/createTeam.ejs');
@@ -51,9 +67,9 @@ exports.team_create_post = (req, res) => {
         req.body.maxmembers.length != 0) {
 
             Team.find({teamname: req.body.teamname})
-            .then((team) => {
+            .then((baseteam) => {
 
-                if(team.length === 0) {
+                if(baseteam.length === 0) {
                     let greatherThanCero = req.body.maxmembers;
 
                     if(req.body.maxmembers < 1) {
@@ -66,9 +82,13 @@ exports.team_create_post = (req, res) => {
                         maxmembers: greatherThanCero,
                         users: req.body.users
                     });
-                    saveTeam.save();
-                    res.send(saveTeam + "Equipo creado");
-                
+
+                    saveTeam.save()
+                    .then(team => {
+
+                        console.log(team);
+                        res.send(saveTeam + "Equipo creado");
+                    });
                 }else {
 
                     res.send("Equipo no disponible");
@@ -77,7 +97,6 @@ exports.team_create_post = (req, res) => {
 
                 if(err) throw err;   
             });
-    
     }else {
 
         res.render('teams/createTeam.ejs');
@@ -90,6 +109,7 @@ exports.team_delete_get = (req, res) => {
 };
 
 exports.team_delete_post = (req, res) => {
+
     Team.find({teamname: req.params.nombre})
     .then(team => {
 
@@ -123,6 +143,7 @@ exports.team_modify_get = (req, res) => {
 };
 
 exports.team_modify_addUser_post = (req, res) => {
+
     Team.find({teamname: req.params.nombre})
     .then(baseteam => {
 
@@ -160,7 +181,6 @@ exports.team_modify_addUser_post = (req, res) => {
 
                         if(err) throw err;
                     });  
-
                 }else {
 
                     res.send("No se ha añadido el usuario");
@@ -187,6 +207,7 @@ exports.team_modify_addUser_post = (req, res) => {
 
 
 exports.team_modify_deleteUser_post = (req, res) => {
+
     Team.find({teamname: req.params.nombre})
     .then(baseteam => {
 
@@ -242,7 +263,6 @@ exports.team_modify_membersNumber_post = (req, res) => {
                 team: baseteam[0],
                 err: "El número introducido no es válido"
             })
-
         }else if(baseteam[0].users.length <= req.body.membersNumber) {
             
             Team.findOneAndUpdate({teamname: baseteam[0].teamname},
@@ -258,7 +278,6 @@ exports.team_modify_membersNumber_post = (req, res) => {
 
                 if(err) throw err;
             });
-
         }else {
 
             res.render('teams/modifyTeam.ejs', {
