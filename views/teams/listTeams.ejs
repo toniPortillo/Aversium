@@ -13,22 +13,29 @@
 
             <%for(let i=0; i<list.length; i++){%>
       
-            <ul>
-            <li><strong>Nombre equipo:</strong><%=list[i].teamname%></li>
-            <li><strong>Creador del equipo:</strong><%=list[i].creator%></li>        
-            <li><strong>Número de miembros del equipo:</strong><%=list[i].maxmembers%></li>   
-            <li><strong>Usuarios del equipo:</strong><%=list[i].users%></li>
+                <ul>
+                <li><strong>Nombre equipo: </strong><%=list[i].teamname%></li>
+                <li><strong>Creador del equipo: </strong><%=list[i].creator%></li>        
+                <li><strong>Número de miembros del equipo: </strong><%=list[i].maxmembers%></li>   
+                <li><strong>Usuarios del equipo: </strong></li>
+                    <%for(let j=0; j<list[i].users.length; j++){%>
+                    
+                        <ul>
+                            <li><strong>Usuario: </strong>Nombre: <%=list[i].users[j].username%>,
+                            email: <%=list[i].users[j].email%></li>
+                        </ul>
+                    <%}%>        
 
-            <form method="GET" action='/teams/<%=list[i].teamname%>'>
-                <input type="submit" value="Seleccionar equipo">
-            </form>
-            <form method="GET" action='/teams/modifyTeam/<%=list[i].teamname%>'>
-                <input type="submit" value="Modificar equipo">
-            </form> 
-            <form method="POST" action='/teams/modifyTeam/<%=list[i].teamname%>'>
-                <input type="submit" value="Borrar equipo">
-            </form>
-            </ul>
+                <form method="GET" action='/teams/<%=list[i].teamname%>'>
+                    <input type="submit" value="Seleccionar equipo">
+                </form>
+                <form method="GET" action='/teams/modifyTeam/<%=list[i].teamname%>'>
+                    <input type="submit" value="Modificar equipo">
+                </form> 
+                <form method="POST" action='/teams/modifyTeam/<%=list[i].teamname%>'>
+                    <input type="submit" value="Borrar equipo">
+                </form>
+                </ul>
             <%};%>
 
      

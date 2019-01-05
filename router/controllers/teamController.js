@@ -134,10 +134,10 @@ exports.team_delete_post = (req, res) => {
             });
         }
         Team.remove({teamname: baseteam[0].teamname})
-        .then(team => {
+        .then(() => {
 
             res.render('teams/showTeam.ejs', {
-                team: team,
+                team: baseteam[0],
                 err: "",
                 operation: "Equipo eliminado"
             });
@@ -182,6 +182,10 @@ exports.team_modify_addUser_post = (req, res) => {
             })
             .then(() => {
 
+                return checkTeam.setDeveloper(baseteam[0].users, user[0]);
+            })
+            .then(() => {
+                
                 return checkTeam.checkFactory(user[0]);
             })
             .then(confirmation => {
@@ -208,7 +212,7 @@ exports.team_modify_addUser_post = (req, res) => {
 
                     res.render('teams/modifyTeam.ejs', {
                         team: baseteam[0],
-                        err: "No se ha añadido el usuario"
+                        err: "No se ha añadido el usuario, por limitaciones de rol o repetición"
                     });
                 }
             })

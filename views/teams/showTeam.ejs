@@ -23,7 +23,15 @@
                 <li><strong>Nombre equipo:</strong><%=team.teamname%></li>
                 <li><strong>Creador del equipo:</strong><%=team.creator%></li>
                 <li><strong>Número de miembros del equipo:</strong><%=team.maxmembers%></li>
-                <li><strong>Usuarios del equipo:</strong><%=team.users%></li>
+                <li><strong>Usuarios del equipo:</strong></li>
+                
+                <%for(let i=0; i<team.users.length; i++){%>
+
+                    <ul>
+                        <li><strong>Usuario:</strong>Nombre: <%=team.users[i].username%>,
+                         email: <%=team.users[i].email%></li>
+                    </ul>
+                <%}%>
             </ul>
 
             <form method="GET" action='/teams'>
