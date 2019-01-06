@@ -5,7 +5,9 @@ let comparePassword = require('../middlewares/comparePassword');
 
 exports.user_register_get = function(req, res) {
 
-    res.render('users/register.ejs');
+    res.render('users/register.ejs', {
+        err: ""
+    });
 };
 
 exports.user_register_post = function(req, res) {
@@ -21,10 +23,13 @@ exports.user_register_post = function(req, res) {
                 password: req.body.password,
                 role: req.body.role
             });
+
             encryptor(saveUser, res);
         }else {
 
-            res.send("Usuario no disponible" + user);
+            res.render('users/register.ejs', {
+                err: "Este email de usuario no esta disponible"
+            });
         }
     }).catch((err) => {
        
@@ -34,21 +39,24 @@ exports.user_register_post = function(req, res) {
 
 exports.user_login_get = function(req, res) {
 
-    res.render('users/login.ejs');
+    res.render('users/login.ejs', {
+        err: ""
+    });
 };
 
 exports.user_login_post = function(req, res) {
-    console.log(req.body.email);
+    
     User.find({email: req.body.email})
     .then((user) => {
         
-        console.log(user[0]);
         if(user.length === 1) {
 
             comparePassword(req.body.password, user, res);
         }else {
 
-            res.send('Error al introducir email de usuario');
+            res.render('users/login.ejs', {
+                err: "Hubo un error, al introducir el email de usuario"
+            });
         }
     })
     .catch((err) => {

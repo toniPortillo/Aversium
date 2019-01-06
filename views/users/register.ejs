@@ -6,6 +6,14 @@
     </head>
     <body>
         <h2>Registro de usuario</h2>
+
+        <%if(err.length != 0){%>
+
+            <br>
+            <strong><%=err%></strong>
+            <br>
+        <%}%>
+
         <p>Introduzca sus datos:</p>
         <form method="POST" action="/users/register">
             <p>
@@ -29,7 +37,7 @@
                 </select>
                 </br>
 
-                <input type="submit" name="Enviar" />
+                <input type="submit" value="Enviar" />
             </p>
         </form>
     </body>

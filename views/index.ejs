@@ -6,6 +6,12 @@
   </head>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <p>Bienvenido a <%= title %></p>
+    <form method="GET" action="/users/login">
+      <input type="submit" value="Entra">
+    </form>
+    <form method="GET" action="/users/register">
+      <input type="submit" value="Registrate">
+    </form>
   </body>
 </html>

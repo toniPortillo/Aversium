@@ -5,10 +5,22 @@
         <link rel='stylesheet' href='/stylesheets/style.css'>
     </head>
     <body>
-        <h2>Usuario <%=user[0].username%></h2>
+        <h2>Usuario <%=user.username%></h2>
+
+            <%if(operation.length != 0){%>
+
+                <br>
+                <strong><%=operation%></strong>
+                <br>
+            <%}%>
+
             <ul>
-                <li><strong>Nombre de usuario:</strong><%=user[0].username</li>
-                <li><strong>role:</strong><%=user[0].role</li>
+                <li><strong>Nombre de usuario: </strong><%=user.username%></li>
+                <li><strong>email: </strong><%=user.email%></li>
+                <li><strong>role: </strong><%=user.role%></li>
             </ul>
+            <form method="GET" action="/teams">
+                <input type="submit" value="Ver lista de equipos">
+            </form>
     </body>
 </html>
