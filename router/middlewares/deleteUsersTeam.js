@@ -1,9 +1,12 @@
 'use strict';
 
 let deleteUsersTeam = (users, user) => {
+    
     let userArray = [];
     return new Promise(resolve => {
+        
         if(user === undefined) {
+            
             let err = "El usuario no existe";
             reject(err);
         }

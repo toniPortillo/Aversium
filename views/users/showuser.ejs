@@ -19,6 +19,10 @@
                 <li><strong>email: </strong><%=user.email%></li>
                 <li><strong>role: </strong><%=user.role%></li>
             </ul>
+
+            <form method="GET" action='/users/modify/<%=user.email%>'>
+                <input type="submit" value="Modificar usuario">
+            </form>
             <form method="GET" action="/teams">
                 <input type="submit" value="Ver lista de equipos">
             </form>

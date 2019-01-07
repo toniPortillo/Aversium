@@ -6,6 +6,7 @@ let comparePassword = (passwordPlainText, user, res) => {
     
     bcrypt.compare(passwordPlainText,  user[0].password)
     .then((response) => {
+        
         if(response) {
 
             res.render('users/showuser.ejs', {

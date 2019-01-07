@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <meta charset="utf8">
+        <title>Modificar usuario</title>
+        <link rel='stylesheet' href='/stylesheets/style.css'>
+    </head>
+    <body>
+        <h2>Usuario <%=user.username%></h2>
+
+        <ul>
+            <li><strong>Nombre de usuario: </strong><%=user.username%></li>
+            <li><strong>email: </strong><%=user.email%></li>
+            <li><strong>role: </strong> <%=user.role%></li>
+        </ul>
+
+        <%if(operation.length != 0){%>
+
+            <br>
+            <strong><%=operation%></strong>
+            <br>
+        <%}%>
+        <%if(err.length != 0){%>
+            
+            <br>
+            <strong><%=err%></strong>
+            <br>
+        <%}%>
+        <form method="POST" action='/users/modifyrole/<%=user.email%>'>
+            <label for="role">Elige tu rol:</label>
+                <select name="role" id="role">
+                    <option value="productOwner">Product Owner</option>
+                    <option value="scrumMaster">Scrum Master</option>
+                    <option value="developer">Desarrollador</option>
+                </select>
+            <input type="submit" value="Modificar rol">
+        </form>
+        <form method="POST" action='/users/modifypassword/<%=user.email%>'>
+            <label for="oldPassword">Introduce la contraseña actual:</label>
+
+        </form>
+        <form method="GET" action='/users/showuser/<%=user.email%>'>
+            <input type="submit" value="Volver al usuario">
+        </form>
+    </body>
+</html>
