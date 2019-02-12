@@ -137,12 +137,40 @@ exports.user_modifypassword_post = function(req, res) {
     User.find({email: req.params.email})
     .then(userbase => {
 
-        bcrypt.compare(req.body.password, userbase[0].password)
+        bcrypt.compare(req.body.oldPassword, userbase[0].password)
         .then(response => {
-
+            
             if(response) {
-                return bcrypt.hash()
+             
+                return bcrypt.hash(req.body.newPassword, 12);
+            }else {
+
+                let err ="Error, introdujo mal la contraseña actual"
+                throw err;
             }
         })
+        .then(hash => {
+           
+            return User.findOneAndUpdate({email: userbase[0].email}, 
+                {password: hash}, {new: true});
+        })
+        .then(user => {
+
+            res.render('users/showuser.ejs', {
+                user: user,
+                operation: "Contraseña cambiada con exito"
+            })
+        })
+        .catch(err => {
+
+            res.render('users/showuser.ejs', {
+                user: userbase[0],
+                operation: err
+            });
+        });
     })
+    .catch(err => {
+
+        if(err) throw err;
+    });
 }

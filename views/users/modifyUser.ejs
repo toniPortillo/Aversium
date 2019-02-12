@@ -26,8 +26,11 @@
             <br>
         <%}%>
         <form method="POST" action='/users/modifyrole/<%=user.email%>'>
+            
             <label for="role">Elige tu rol:</label>
+                
                 <select name="role" id="role">
+                    
                     <option value="productOwner">Product Owner</option>
                     <option value="scrumMaster">Scrum Master</option>
                     <option value="developer">Desarrollador</option>
@@ -35,10 +38,22 @@
             <input type="submit" value="Modificar rol">
         </form>
         <form method="POST" action='/users/modifypassword/<%=user.email%>'>
-            <label for="oldPassword">Introduce la contraseña actual:</label>
+            <p>
+                
+                <label for="oldPassword">Introduce la contraseña actual:</label>
+                <input type="password" name="oldPassword" id="oldPassword" required/>
+                </br>
+
+                <label for="newPassword">Introduce la nueva contraseña:</label>
+                <input type="password" name="newPassword" id="newPassword" required/>
+                </br>
+
+                <input type="submit" value="Enviar"/>
+            </p>
 
         </form>
         <form method="GET" action='/users/showuser/<%=user.email%>'>
+            
             <input type="submit" value="Volver al usuario">
         </form>
     </body>
