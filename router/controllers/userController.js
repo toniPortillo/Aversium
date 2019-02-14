@@ -145,7 +145,7 @@ exports.user_modifypassword_post = function(req, res) {
                 return bcrypt.hash(req.body.newPassword, 12);
             }else {
 
-                let err ="Error, introdujo mal la contraseña actual"
+                let err = "Error, introdujo mal la contraseña actual";
                 throw err;
             }
         })
