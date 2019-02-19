@@ -24,4 +24,6 @@ router.get('/modify/:email', user_controllers.user_modify_get);
 router.post('/modifyrole/:email', user_controllers.user_modifyrole_post);
 router.post('/modifypassword/:email', user_controllers.user_modifypassword_post);
 
+router.get('/logout', user_controllers.user_logout);
+
 module.exports = router;

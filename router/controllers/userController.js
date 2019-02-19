@@ -13,6 +13,7 @@ exports.user_register_get = function(req, res) {
 
 exports.user_register_post = function(req, res) {
 
+    //if(req.cookies.user) res.clearCookie('user');
     User.find({email: req.body.email})
     .then((user) => {
         
@@ -40,9 +41,18 @@ exports.user_register_post = function(req, res) {
 
 exports.user_login_get = function(req, res) {
 
-    res.render('users/login.ejs', {
-        err: ""
-    });
+    /*if(req.cookies.user) {
+        
+        res.render('users/showuser.ejs', {
+        user: req.cookies.user,
+        operation: ""
+        });
+    }else {
+    */  console.log(req.session);
+        res.render('users/login.ejs', {
+            err: ""
+        });
+    //}
 };
 
 exports.user_login_post = function(req, res) {
@@ -103,7 +113,6 @@ exports.user_modifyrole_post = function(req, res) {
     
     User.find({email: req.params.email})
     .then(userbase => {
-
 
         if(userbase[0].role != req.body.role) {
 
@@ -174,3 +183,12 @@ exports.user_modifypassword_post = function(req, res) {
         if(err) throw err;
     });
 }
+
+exports.user_logout = function(req, res) {
+
+    res.clearCookie('user');
+    res.render('index.ejs', {
+        title: 'Aversium',
+        operation: 'Usuario desconectado'
+    });
+};

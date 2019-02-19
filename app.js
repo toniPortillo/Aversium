@@ -3,6 +3,8 @@ var express = require('express');
 var cookieParser = require('cookie-parser');
 var path = require('path');
 var logger = require('morgan');
+var session = require('express-session');
+var store = require('./config/connect-mongodb-session/dbAversiumSession');
 
 let indexRouter = require('./router/index');
 let usersRouter = require('./router/users');
@@ -11,15 +13,27 @@ let teamsRouter = require('./router/teams');
 var app = express();
 
 // settings
+if(process.argv[2] == undefined) throw('The secret session argument is empty');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
 
 // middlewares
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({
+  secret: process.argv[2],
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 7
+  },
+  store: store,
+  resave: true,
+  saveUninitialized: true
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
