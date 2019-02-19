@@ -12,4 +12,4 @@ var store = new MongoDBStore({
     console.log('Successfully connected dbAversiumSessions');
 });
 
-module.exports = store
+module.exports = store;

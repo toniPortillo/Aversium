@@ -25,7 +25,7 @@
             <strong><%=err%></strong>
             <br>
         <%}%>
-        <form method="POST" action='/users/modifyrole/<%=user.email%>'>
+        <form method="POST" action='/users/modifyrole'>
             
             <label for="role">Elige tu rol:</label>
                 
@@ -37,7 +37,7 @@
                 </select>
             <input type="submit" value="Modificar rol">
         </form>
-        <form method="POST" action='/users/modifypassword/<%=user.email%>'>
+        <form method="POST" action='/users/modifypassword'>
             <p>
                 
                 <label for="oldPassword">Introduce la contraseña actual:</label>
@@ -52,7 +52,7 @@
             </p>
 
         </form>
-        <form method="GET" action='/users/showuser/<%=user.email%>'>
+        <form method="GET" action='/users/showuser>'>
             
             <input type="submit" value="Volver al usuario">
         </form>

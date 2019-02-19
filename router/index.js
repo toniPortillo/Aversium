@@ -3,9 +3,12 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { 
+
+  if(req.session.user_id == undefined) res.render('index', { 
     title: 'Aversium',
-    operation: '' });
+    operation: '' 
+  });
+  res.redirect('/users/showuser');
 });
 
 module.exports = router;
