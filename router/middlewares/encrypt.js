@@ -1,5 +1,6 @@
 'use strict';
 const bcrypt = require('bcrypt');
+let userCookie = require('../cookies/userCookie');
 
 let encryptor = (user, res, req) => {
 
@@ -10,7 +11,11 @@ let encryptor = (user, res, req) => {
         user.save()
         .then(user => {
             
-            req.session.user_id = user._id;
+            req.session.user = userCookie;
+            req.session.user._id = user._id;
+            req.session.user.username = user.username;
+            req.session.user.email = user.email;
+            req.session.user.role = user.role;
             res.render('users/showuser.ejs', {
                 user: user,
                 operation: "Usuario creado con exito"

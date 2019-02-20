@@ -1,7 +1,7 @@
 'use strict';
 
 let userCookie = {
-
+    _id: "",
     username: "",
     email: "",
     role:""
