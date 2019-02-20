@@ -4,11 +4,10 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-  if(req.session.user_id == undefined) res.render('index', { 
+  req.session.user_id == undefined ? res.render('index', {
     title: 'Aversium',
-    operation: '' 
-  });
-  res.redirect('/users/showuser');
+    operation: ''
+  }) : res.redirect('/users/showuser');
 });
 
 module.exports = router;

@@ -6,8 +6,8 @@ let comparePassword = require('../middlewares/comparePassword');
 
 exports.user_register_get = function(req, res) {
 
-    if(req.session.user_id == undefined) res.render('users/register.ejs', { err: ""});
-    res.redirect('/users/showuser');
+    req.session.user_id == undefined ? res.render('users/register.ejs', { err : "" })
+    : res.redirect('/users/showuser');
 };
 
 exports.user_register_post = function(req, res) {
@@ -39,8 +39,8 @@ exports.user_register_post = function(req, res) {
 
 exports.user_login_get = function(req, res) {
 
-    if(req.session.user_id == undefined) res.render('users/login.ejs', { err: "" });
-    res.redirect('/users/showuser');
+    req.session.user_id == undefined ? res.render('users/login.ejs', { err : "" })
+    : res.redirect('/users/showuser');
 };
 
 exports.user_login_post = function(req, res) {
@@ -153,16 +153,18 @@ exports.user_modifypassword_post = function(req, res) {
         })
         .then(user => {
 
-            res.render('users/showuser.ejs', {
+            res.render('users/modifyUser.ejs', {
                 user: user,
-                operation: "Contraseña cambiada con exito"
+                operation: "Contraseña cambiada con exito",
+                err: ""
             })
         })
         .catch(err => {
 
-            res.render('users/showuser.ejs', {
+            res.render('users/modifyUser.ejs', {
                 user: userbase[0],
-                operation: err
+                operation: "",
+                err: err
             });
         });
     })
@@ -173,6 +175,18 @@ exports.user_modifypassword_post = function(req, res) {
 }
 
 exports.user_logout = function(req, res) {
+
+    if(req.session) req.session.destroy()
+    .then(() => {
+
+        res.redirect('/')
+    })
+    .catch((err) => {
+        
+        res.render('users/showuser.ejs', {
+            user: ""
+        })
+    });
 
     res.render('index.ejs', {
         title: 'Aversium',
