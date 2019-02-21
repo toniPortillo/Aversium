@@ -1,5 +1,4 @@
 'use strict';
-
 let bcrypt = require('bcrypt');
 let userCookie = require('../cookies/userCookie');
 
