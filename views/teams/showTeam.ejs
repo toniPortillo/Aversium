@@ -34,6 +34,12 @@
                 <%}%>
             </ul>
 
+            <form method="GET" action='/teams/modifyTeam/<%=team.teamname%>'>
+                <input type="submit" value="Modificar equipo">
+            </form> 
+            <form method="POST" action='/teams/modifyTeam/<%=team.teamname%>'>
+                <input type="submit" value="Borrar equipo">
+            </form>
             <form method="GET" action='/teams'>
                 <input type="submit" value="Volver a la lista">
             </form>

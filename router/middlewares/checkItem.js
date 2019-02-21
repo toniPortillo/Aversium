@@ -15,7 +15,7 @@ function asyncCheckItem(array, item) {
                     reject(check);
                 }
             });
-        })
+        }, 0);
     });
     
     return searchItem;
