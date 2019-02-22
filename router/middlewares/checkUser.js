@@ -11,11 +11,9 @@ function asyncCheckItem(array, item) {
                 if(element.username === item) {
                 
                     resolve();
-                }else {
-
-                    reject();
                 }
             });
+            reject();
         }, 0);
     });
     

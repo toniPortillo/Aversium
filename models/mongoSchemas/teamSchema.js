@@ -7,7 +7,7 @@ const teamSchemas = {
 
     team: new Schema({
         teamname: {type: String},
-        creator: {type: String},
+        creator: [user],
         maxmembers: {type: Number},
         users: [user]
     })

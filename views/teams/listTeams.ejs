@@ -9,19 +9,22 @@
             <form method="GET" action='/teams/createTeam'>
                 <input type="submit" value="Crear equipo">
             </form>
+            <%if(operation.length != 0) {%>
 
+                <strong><%=operation%></strong>
+            <%}%>
             <%for(let i=0; i<list.length; i++){%>
       
                 <ul>
                 <li><strong>Nombre equipo: </strong><%=list[i].teamname%></li>
-                <li><strong>Creador del equipo: </strong><%=list[i].creator%></li>        
+                <li><strong>Creador del equipo: </strong><%=list[i].creator[0].username%></li>        
                 <li><strong>Número de miembros del equipo: </strong><%=list[i].maxmembers%></li>   
                 <li><strong>Usuarios del equipo: </strong></li>
                     <%for(let j=0; j<list[i].users.length; j++){%>
                     
                         <ul>
                             <li><strong>Usuario: </strong>Nombre: <%=list[i].users[j].username%>,
-                            email: <%=list[i].users[j].email%></li>
+                            email: <%=list[i].users[j].email%>, rol: <%=list[i].users[j].role%></li>
                         </ul>
                     <%}%>           
                     <%if(teamname == list[i].teamname){%>

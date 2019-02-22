@@ -34,6 +34,7 @@ exports.team_list_get = (req, res) => {
             res.render('teams/listTeams.ejs', {
                 list : list,
                 teamname: req.flash('aux'),
+                operation: req.flash('operation'),
                 err: req.flash('err')
             });
         });
@@ -48,14 +49,13 @@ exports.team_show_get = (req, res) => {
     
     Team.find({teamname: req.params.nombre})
     .then(baseteam => {
-        
         CheckUser(baseteam[0].users, req.session.user.username)
         .then(() => {
             
             res.render('teams/showTeam.ejs', {
                 team: baseteam[0],
                 operation: "",
-                err: ""
+                err: req.flash('err')
             })
         })
         .catch(() => {
@@ -80,8 +80,7 @@ exports.team_create_get = (req, res) => {
 
 exports.team_create_post = (req, res) => {
 
-    if(req.body.teamname.length != 0 && req.body.creator.length != 0 &&
-        req.body.maxmembers.length != 0) {
+    if(req.body.teamname.length != 0 && req.body.maxmembers.length != 0) {
 
             Team.find({teamname: req.body.teamname})
             .then((baseteam) => {
@@ -95,9 +94,9 @@ exports.team_create_post = (req, res) => {
 
                     let saveTeam = new Team({
                         teamname: req.body.teamname,
-                        creator: req.body.creator,
+                        creator: req.session.user,
                         maxmembers: greatherThanCero,
-                        users: req.body.users
+                        users: req.session.user
                     });
 
                     saveTeam.save()
@@ -138,22 +137,29 @@ exports.team_delete_post = (req, res) => {
     Team.find({teamname: req.params.nombre})
     .then(baseteam => {
 
-        if(!baseteam) {
-            
-            res.render('teams/showTeam.ejs', {
-                team: [],
-                err: "Error en el borrado del equipo",
-                operation: ""
-            });
-        }
-        Team.remove({teamname: baseteam[0].teamname})
+        CheckUser(baseteam[0].creator, req.session.user.username)
         .then(() => {
 
-            res.render('teams/showTeam.ejs', {
-                team: baseteam[0],
-                err: "",
-                operation: "Equipo eliminado"
+            if(!baseteam) {
+                
+                res.render('teams/showTeam.ejs', {
+                    team: [],
+                    err: "Error en el borrado del equipo",
+                    operation: ""
+                });
+            }
+            Team.remove({teamname: baseteam[0].teamname})
+            .then(() => {
+
+                req.flash('operation', 'Equipo '+ baseteam[0].teamname 
+                + ' eliminado exitosamente');
+                res.redirect('/teams/');
             });
+        })
+        .catch(() => {
+
+            req.flash('err', "No eres el creador del equipo")
+            res.redirect('/teams/' + baseteam[0].teamname);
         });
     })
     .catch(err => {

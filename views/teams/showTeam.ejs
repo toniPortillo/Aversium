@@ -21,7 +21,7 @@
             <%}%>
             <ul>
                 <li><strong>Nombre equipo:</strong><%=team.teamname%></li>
-                <li><strong>Creador del equipo:</strong><%=team.creator%></li>
+                <li><strong>Creador del equipo:</strong><%=team.creator[0].username%></li>
                 <li><strong>Número de miembros del equipo:</strong><%=team.maxmembers%></li>
                 <li><strong>Usuarios del equipo:</strong></li>
                 
@@ -29,7 +29,7 @@
 
                     <ul>
                         <li><strong>Usuario:</strong>Nombre: <%=team.users[i].username%>,
-                         email: <%=team.users[i].email%></li>
+                         email: <%=team.users[i].email%>, rol: <%=team.users[i].role%></li>
                     </ul>
                 <%}%>
             </ul>
