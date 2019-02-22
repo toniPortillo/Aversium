@@ -6,7 +6,6 @@
     </head>
     <body>
         <h2>Lista de equipos:</h2>
-            
             <form method="GET" action='/teams/createTeam'>
                 <input type="submit" value="Crear equipo">
             </form>
@@ -24,11 +23,16 @@
                             <li><strong>Usuario: </strong>Nombre: <%=list[i].users[j].username%>,
                             email: <%=list[i].users[j].email%></li>
                         </ul>
-                    <%}%>        
-
-                <form method="GET" action='/teams/<%=list[i].teamname%>'>
-                    <input type="submit" value="Seleccionar equipo">
-                </form>
+                    <%}%>           
+                    <%if(teamname == list[i].teamname){%>
+                    
+                        <br>
+                        <strong><%=err%></strong>
+                        <br>
+                    <%}%>
+                    <form method="GET" action='/teams/<%=list[i].teamname%>'>
+                        <input type="submit" value="Seleccionar equipo">
+                    </form>
                 </ul>
             <%};%>
 

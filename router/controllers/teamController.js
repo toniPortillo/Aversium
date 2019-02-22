@@ -3,6 +3,7 @@ let Team = require('../../models/mongoModels/teamModel').Team;
 let User = require('../../models/mongoModels/userModel').User;
 let deleteUserTeam = require('../middlewares/deleteUsersTeam');
 let CheckTeam = require('../middlewares/checkTeam');
+let CheckUser = require('../middlewares/checkUser');
 
 exports.team_list_get = (req, res) => {
 
@@ -30,9 +31,11 @@ exports.team_list_get = (req, res) => {
 
         Promise.all(allPromises)
         .then(() => {
-
             res.render('teams/listTeams.ejs', {
-                list : list});
+                list : list,
+                teamname: req.flash('aux'),
+                err: req.flash('err')
+            });
         });
     })
     .catch((err) => {
@@ -45,12 +48,22 @@ exports.team_show_get = (req, res) => {
     
     Team.find({teamname: req.params.nombre})
     .then(baseteam => {
-
-        res.render('teams/showTeam.ejs', {
-            team: baseteam[0],
-            operation: "",
-            err: ""
+        
+        CheckUser(baseteam[0].users, req.session.user.username)
+        .then(() => {
+            
+            res.render('teams/showTeam.ejs', {
+                team: baseteam[0],
+                operation: "",
+                err: ""
+            })
         })
+        .catch(() => {
+
+            req.flash('aux', baseteam[0].teamname);
+            req.flash('err', 'No perteneces al equipo');
+            res.redirect('/teams/');
+        });
     })
     .catch(err => {
 

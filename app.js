@@ -4,6 +4,7 @@ var cookieParser = require('cookie-parser');
 var path = require('path');
 var logger = require('morgan');
 var session = require('express-session');
+var flash = require('connect-flash');
 var store = require('./config/connect-mongodb-session/dbAversiumSession');
 
 let indexRouter = require('./router/index');
@@ -34,8 +35,15 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
+app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//locals
+/*app.use(function(req, res, next) {
+  res.locals.aux = req.flash('aux');
+  //res.locals.err = req.flash('err');
+  next();
+});*/
 
 // routers
 app.use('/', indexRouter);
