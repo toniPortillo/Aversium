@@ -38,13 +38,6 @@ app.use(session({
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//locals
-/*app.use(function(req, res, next) {
-  res.locals.aux = req.flash('aux');
-  //res.locals.err = req.flash('err');
-  next();
-});*/
-
 // routers
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

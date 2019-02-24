@@ -53,8 +53,8 @@ exports.team_show_get = (req, res) => {
         .then(() => {
             
             res.render('teams/showTeam.ejs', {
-                team: baseteam[0],
-                operation: "",
+                team: baseteam[0] || req.flash('aux'),
+                operation: req.flash('operation'),
                 err: req.flash('err')
             })
         })
@@ -102,11 +102,9 @@ exports.team_create_post = (req, res) => {
                     saveTeam.save()
                     .then(team => {
             
-                        res.render('teams/showTeam.ejs', {
-                            team: team,
-                            operation: "Equipo creado",
-                            err: ""
-                        });
+                        req.flash('aux', team);
+                        req.flash('operation', 'Equipo creado');
+                        res.redirect('/teams/' + team.teamname);
                     });
                 }else {
                     let err = "Equipo no disponible";
@@ -237,7 +235,7 @@ exports.team_modify_addUser_post = (req, res) => {
 
                     res.render('teams/modifyTeam.ejs', {
                         team: baseteam[0],
-                        err: "No se ha añadido el usuario, por limitaciones de rol o repetición"
+                        err: "No se añadió usuario por limitaciones de rol, repetición o capacidad"
                     });
                 }
             })
