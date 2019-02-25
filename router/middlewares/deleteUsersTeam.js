@@ -1,18 +1,24 @@
 'use strict';
 
-let deleteUsersTeam = (users, user) => {
+let deleteUsersTeam = (users, user, creator) => {
     
     let userArray = [];
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         
+        let err = "";
         if(user === undefined) {
             
-            let err = "El usuario no existe";
+            err = 'El usuario introducido para ser eliminado del equipo, no existe';
             reject(err);
         }
+        if(user.email === creator.email) {
+
+            err = "No se puede eliminar el creador del equipo";
+            reject(err); 
+        }
         users.forEach((item) => {
-       
-            if(item.email !== user.email) {
+            
+            if(item.email != user.email) {
        
                 userArray.push(item);
             }

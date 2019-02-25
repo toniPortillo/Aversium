@@ -8,7 +8,7 @@ function asyncCheckItem(array, item) {
             if(array.length == 0) reject();
             array.forEach(element => {
                 
-                if(element.username === item) {
+                if(element.email === item) {
                 
                     resolve();
                 }

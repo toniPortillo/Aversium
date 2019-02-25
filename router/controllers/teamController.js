@@ -49,7 +49,7 @@ exports.team_show_get = (req, res) => {
     
     Team.find({teamname: req.params.nombre})
     .then(baseteam => {
-        CheckUser(baseteam[0].users, req.session.user.username)
+        CheckUser(baseteam[0].users, req.session.user.email)
         .then(() => {
             
             res.render('teams/showTeam.ejs', {
@@ -135,7 +135,7 @@ exports.team_delete_post = (req, res) => {
     Team.find({teamname: req.params.nombre})
     .then(baseteam => {
 
-        CheckUser(baseteam[0].creator, req.session.user.username)
+        CheckUser(baseteam[0].creator, req.session.user.email)
         .then(() => {
 
             if(!baseteam) {
@@ -168,12 +168,12 @@ exports.team_modify_get = (req, res) => {
     Team.find({teamname: req.params.nombre})
     .then((team) => {
 
-        CheckUser(team[0].creator, req.session.user.username)
+        CheckUser(team[0].creator, req.session.user.email)
         .then(() => {
 
             res.render('teams/modifyTeam.ejs', {
-                team: team[0],
-                err: ""
+                team: team[0] || req.flash('aux'),
+                err: req.flash('err')
             });
         })
         .catch(() => {
@@ -222,10 +222,8 @@ exports.team_modify_addUser_post = (req, res) => {
                         {users: usersArray}, {new: true})
                     .then(team => {
                         
-                        res.render('teams/modifyTeam.ejs', {
-                            team: team,
-                            err: ""
-                        });
+                        req.flash('aux', team);
+                        res.redirect('/teams/modifyTeam/' + team.teamname);
                     })
                     .catch(err => {
 
@@ -233,18 +231,16 @@ exports.team_modify_addUser_post = (req, res) => {
                     });  
                 }else {
 
-                    res.render('teams/modifyTeam.ejs', {
-                        team: baseteam[0],
-                        err: "No se añadió usuario por limitaciones de rol, repetición o capacidad"
-                    });
+                    req.flash('aux', baseteam[0]);
+                    req.flash('err', 'No se añadió usuario por limitaciones de rol, repetición o capacidad');
+                    res.redirect('/teams/modifyTeam/' + baseteam[0].teamname);
                 }
             })
             .catch(err => {
                 
-                res.render('teams/modifyTeam.ejs', {
-                    team: baseteam[0],
-                    err: "El usuario introducido para ser añadido al equipo, no existe"
-                });
+                req.flash('aux', baseteam[0]);
+                req.flash('err', 'El usuario introducido para ser añadido al equipo, no existe');
+                res.redirect('/teams/modifyTeam/' + baseteam[0].teamname);
             });
         })
         .catch(err => {
@@ -269,29 +265,26 @@ exports.team_modify_deleteUser_post = (req, res) => {
             
             let usersArray = baseteam[0].users;
             
-            deleteUserTeam(usersArray, user[0])
+            deleteUserTeam(usersArray, user[0], baseteam[0].creator[0])
             .then(usersTeam => {
 
                 Team.findOneAndUpdate({teamname: baseteam[0].teamname},
                     {users: usersTeam}, {new: true})
                 .then(team => {
                     
-                    res.render('teams/modifyTeam.ejs', {
-                        team: team,
-                        err: ""
-                    });
+                    req.flash('aux', team);
+                    res.redirect('/teams/modifyTeam/' + team.teamname);
                 })
                 .catch(err => {
 
                     if(err) throw err;
                 });
             })
-            .catch(err => {
-
-                res.render('teams/modifyTeam.ejs', {
-                    team: baseteam[0],
-                    err: "El usuario introducido para ser eliminado del equipo, no existe"
-                });
+            .catch(error => {
+                console.log(error);
+                req.flash('aux', baseteam[0]);
+                req.flash('err', error);
+                res.redirect('/teams/modifyTeam/' + baseteam[0].teamname);
             });
         })
         .catch(err => {
@@ -312,31 +305,27 @@ exports.team_modify_membersNumber_post = (req, res) => {
        
         if(req.body.membersNumber.length === 0 || req.body.membersNumber === "0") {
             
-            res.render('teams/modifyTeam.ejs', {
-                team: baseteam[0],
-                err: "El número introducido no es válido"
-            })
+            req.flash('aux', baseteam[0]);
+            req.flash('err', 'El número introducido no es válido');
+            res.redirect('/teams/modifyTeam/' + baseteam[0].teamname);
         }else if(baseteam[0].users.length <= req.body.membersNumber) {
             
             Team.findOneAndUpdate({teamname: baseteam[0].teamname},
                 {maxmembers: req.body.membersNumber}, {new: true})
             .then(team => {
 
-                res.render('teams/modifyTeam.ejs', {
-                    team: team,
-                    err: ""
-                });
+                req.flash('aux', team);
+                res.redirect('/teams/modifyTeam/' + team.teamname);
             })
             .catch(err => {
 
                 if(err) throw err;
             });
         }else {
-
-            res.render('teams/modifyTeam.ejs', {
-                team: baseteam[0],
-                err: "Error: Existen ya un número mayor de miembros, de los que quiere restringir"
-            });
+            
+            req.flash('aux', baseteam[0]);
+            req.flash('err', 'Existe ya un número mayor de miembros, de los que quiere restringir');
+            res.redirect('/teams/modifyTeam/' + baseteam[0].teamname);
         }
     })
     .catch(err => {
