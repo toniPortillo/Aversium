@@ -1,8 +1,7 @@
 'use strict';
-
-module.exports = (Schema) => {
+module.exports = (db) => {
     const userSchemas = {
-        user: new Schema({
+        user: new db.Schema({
             username: {type: String, require: true},
             email: {type: String, require: true},
             password: {type: String, require: true},

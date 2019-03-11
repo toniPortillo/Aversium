@@ -4,13 +4,11 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const config = require('config');
 const dbSessionsConfig = config.get('app.database');
 
-var store = new MongoDBStore({
+const store = new MongoDBStore({
     uri:`mongodb://localhost/${dbSessionsConfig.dbNameSessions}`,
     collection: 'mySessions'
-},
-(error) => {
-    
-    if(error) trow(error);
+}, (err) => {
+    if(err) throw new Error(`Erroneously connected ${dbSessionsConfig.dbNameSessions}`);
     console.log(`Successfully connected ${dbSessionsConfig.dbNameSessions}`);
 });
 

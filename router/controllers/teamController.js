@@ -1,6 +1,6 @@
 'use strict';
-let Team = require('../../models/mongoModels/teamModel').Team;
-let User = require('../../models/mongoModels/userModel').User;
+let Team = require('../../models/mongoModels/index').Team;
+let User = require('../../models/mongoModels/index').User;
 let deleteUserTeam = require('../middlewares/deleteUsersTeam');
 let CheckTeam = require('../middlewares/checkTeam');
 let CheckUser = require('../middlewares/checkUser');

@@ -5,7 +5,7 @@ var path = require('path');
 var logger = require('morgan');
 var session = require('express-session');
 var flash = require('connect-flash');
-var store = require('./config/connect-mongodb-session/dbAversiumSession');
+var store = require('./utils/connect-mongodb-session/databaseSession');
 
 let indexRouter = require('./router/index');
 let usersRouter = require('./router/users');

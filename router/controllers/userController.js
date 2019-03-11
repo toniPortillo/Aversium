@@ -1,5 +1,5 @@
 'use strict';
-let User = require('../../models/mongoModels/userModel').User;
+let User = require('../../models/mongoModels/index').User;
 let bcrypt = require('bcrypt');
 let encryptor = require('../middlewares/encrypt');
 let comparePassword = require('../middlewares/comparePassword');

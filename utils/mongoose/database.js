@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const config = require('config');
 const dbConfig = config.get('app.database');
-const testHelper = require('../test/functionalTest/test_helper_test');
+const testHelper = require('../../test/functionalTest/test_helper_test');
 
 if(process.env.NODE_ENV === 'test') {
     testHelper();
@@ -12,3 +12,5 @@ if(process.env.NODE_ENV === 'test') {
         console.log(`Successfully connected ${dbConfig.dbName}`);
     })
 }
+
+module.exports = mongoose;
