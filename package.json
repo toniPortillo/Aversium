@@ -3,10 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "NODE_ENV=development node ./bin/www",
+    "test": "NODE_ENV=test jest ./test/unitTest/*",
+    "test:mocha": "NODE_ENV=test mocha ./test/functionalTest/*"
   },
   "dependencies": {
     "bcrypt": "^3.0.2",
+    "config": "^3.0.1",
     "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^2.1.1",
     "cookie-parser": "~1.4.3",
@@ -16,7 +19,12 @@
     "express-session": "^1.15.6",
     "http-errors": "~1.6.2",
     "mongoose": "~5.3.12",
-    "morgan": "~1.9.0",
-    "node-fetch": "~2.3.0"
+    "morgan": "^1.9.1"
+  },
+  "devDependencies": {
+    "axios": "^0.18.0",
+    "chai": "^4.2.0",
+    "jest": "^24.1.0",
+    "mocha": "^6.0.2"
   }
 }

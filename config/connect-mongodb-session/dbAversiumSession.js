@@ -1,15 +1,17 @@
 'use strict';
-var session = require('express-session');
-var MongoDBStore = require('connect-mongodb-session')(session);
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
+const config = require('config');
+const dbSessionsConfig = config.get('app.database');
 
 var store = new MongoDBStore({
-    uri:'mongodb://localhost/dbAversiumSessions',
+    uri:`mongodb://localhost/${dbSessionsConfig.dbNameSessions}`,
     collection: 'mySessions'
 },
 (error) => {
     
     if(error) trow(error);
-    console.log('Successfully connected dbAversiumSessions');
+    console.log(`Successfully connected ${dbSessionsConfig.dbNameSessions}`);
 });
 
 module.exports = store;

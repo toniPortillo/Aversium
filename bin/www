@@ -7,12 +7,13 @@
 var app = require('../app');
 var debug = require('debug')('aversium:server');
 var http = require('http');
-
+const config = require('config');
+const expressConfig = config.get('app.express');
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || expressConfig.port);
 app.set('port', port);
 
 /**

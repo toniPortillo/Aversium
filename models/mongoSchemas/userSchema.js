@@ -1,5 +1,4 @@
 'use strict';
-
 const mongoose = require('../../config/mongoose/dbAversium');
 const Schema = mongoose.Schema;
 

@@ -12,8 +12,8 @@ let usersRouter = require('./router/users');
 let teamsRouter = require('./router/teams');
 
 var app = express();
-
 // settings
+console.log("process.argv[2]= " + process.argv[2]);
 if(process.argv[2] == undefined) throw('The secret session argument is empty');
 
 // view engine setup

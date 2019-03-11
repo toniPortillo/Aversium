@@ -1,0 +1,12 @@
+{
+    "app": {
+        "database": {
+            "dbName": "dbAversium",
+            "dbNameSessions": "dbAversiumSessions"
+        },
+        "express": {
+            "host": "localhost",
+            "port": "3000"
+        }
+    } 
+}
