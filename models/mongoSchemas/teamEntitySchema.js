@@ -1,11 +1,11 @@
 'use strict';
-module.exports = (db, user) => {
+module.exports = (db, Schemas) => {
     const teamSchemas = {
         team: new db.Schema({
             teamname: {type: String, require: true},
-            creator: [user],
+            creator: {type: [Schemas.user], require: true},
             maxmembers: {type: Number, require: true},
-            users: [user]
+            users: [Schemas.user]
         })
     };
 

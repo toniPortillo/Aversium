@@ -1,5 +1,5 @@
 'use strict';
-module.exports = (db) => {
+module.exports = (db, Schemas) => {
     const userSchemas = {
         user: new db.Schema({
             username: {type: String, require: true},
