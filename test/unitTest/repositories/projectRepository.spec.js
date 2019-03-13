@@ -103,8 +103,9 @@ describe('Repositorio: Project', () => {
             const projectRepository = createProjectRepository(projectEntity);
             const project = await projectRepository.removeById(projectToFind[0]._id);
             expect(projectEntity.find).toBeCalledWith({_id: projectToFind[0]._id});
-            expect(project).toEqual(projectToFind);
-            expect.assertions(2);
+            expect(projectEntity.remove).toBeCalledWith({_id: projectToFind[0]._id})
+            expect(project).toEqual(projectToFind[0]);
+            expect.assertions(3);
         })
     })
 });

@@ -49,6 +49,12 @@ module.exports = projectEntity => ({
     },
     removeById: async (_id) => {
         const query = {_id: _id};
-        
+        const projectFound = await projectEntity.find(query);
+
+        if(projectFound.length !== 0) {
+            return await projectEntity.remove({_id: projectFound[0]._id});
+        }else {
+            throw new Error("Proyecto no encontrado. No, se realizó borrado de proyecto");
+        }
     }
 })
