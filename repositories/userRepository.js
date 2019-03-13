@@ -5,10 +5,7 @@ module.exports = (userEntity) => ({
 
         if(!userFound.length) {
 
-            return await userEntity.save(username,
-                email,
-                password,
-                role);
+            return await userEntity.save();
         } else {    
             throw new Error("Usuario ya existente");
         }
