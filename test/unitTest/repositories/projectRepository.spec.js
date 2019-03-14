@@ -21,7 +21,7 @@ const mockProjectEntityRemoveByParamSuccess = (projectFound) => ({
 
 describe('Repositorio: Project', () => {
     describe('Metodo create', () => {
-        it('Debe crear un proyecto, si este no existe', async () => {
+        it('Debe guardar un proyecto en la bd, si este no existe', async () => {
             const user = {};
             const productBacklog = {};
             const kanban = {};
