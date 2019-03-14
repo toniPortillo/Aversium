@@ -39,11 +39,17 @@ describe('Repositorio: Project', () => {
             const projectEntity = mockProjectEntityCreateSuccess(projectToCreate);
             const projectRepository = createProjectRepository(projectEntity);
             
-            expect.assertions(2);
             const project = await projectRepository.create(projectToCreate.projectname, projectToCreate.responsable,
                 projectToCreate.productBacklog, projectToCreate.kanban ,projectToCreate.client, projectToCreate.deadline);
+            expect(typeof projectToCreate.projectname).toBe('string');
+            expect(projectToCreate.responsable).toBeDefined();
+            expect(projectToCreate.productBacklog).toBeDefined();
+            expect(projectToCreate.kanban).toBeDefined();
+            expect(typeof projectToCreate.client).toBe('string');
+            expect(typeof projectToCreate.deadline).toBe('object');
             expect(projectEntity.find).toBeCalledWith({projectname: projectToCreate.projectname});
             expect(project).toEqual(projectToCreate);
+            expect.assertions(8);
         })
     });
 
