@@ -41,6 +41,7 @@ describe('Repositorio: Project', () => {
             
             const project = await projectRepository.create(projectToCreate.projectname, projectToCreate.responsable,
                 projectToCreate.productBacklog, projectToCreate.kanban ,projectToCreate.client, projectToCreate.deadline);
+            expect.assertions(8);
             expect(typeof projectToCreate.projectname).toBe('string');
             expect(projectToCreate.responsable).toBeDefined();
             expect(projectToCreate.productBacklog).toBeDefined();
@@ -49,7 +50,6 @@ describe('Repositorio: Project', () => {
             expect(typeof projectToCreate.deadline).toBe('object');
             expect(projectEntity.find).toBeCalledWith({projectname: projectToCreate.projectname});
             expect(project).toEqual(projectToCreate);
-            expect.assertions(8);
         })
     });
 
@@ -63,9 +63,9 @@ describe('Repositorio: Project', () => {
             const projectEntity = mockProjectEntityGetAllSuccess(projectListToCreate);
             const projectRepository = createProjectRepository(projectEntity);
             const projectList = await projectRepository.getAll();
+            expect.assertions(2);
             expect(projectEntity.find).toBeCalledWith({});
             expect(projectList).toEqual(projectListToCreate);
-            expect.assertions(2);
         });
     });
 
@@ -78,9 +78,9 @@ describe('Repositorio: Project', () => {
             const projectEntity = mockProjectEntityFindByParamSuccess(projectToFind);
             const projectRepository = createProjectRepository(projectEntity);
             const project = await projectRepository.findOneByName(projectToFind[0].projectname);
+            expect.assertions(2);
             expect(projectEntity.find).toBeCalledWith({projectname: projectToFind[0].projectname});
             expect(project).toEqual(projectToFind);
-            expect.assertions(2);
         });
     });
 
@@ -93,9 +93,9 @@ describe('Repositorio: Project', () => {
             const projectEntity = mockProjectEntityFindByParamSuccess(projectToFind);
             const projectRepository = createProjectRepository(projectEntity);
             const project = await projectRepository.findOneById(projectToFind[0]._id);
+            expect.assertions(2); 
             expect(projectEntity.find).toBeCalledWith({_id: projectToFind[0]._id});
             expect(project).toEqual(projectToFind);
-            expect.assertions(2); 
         });        
     });
     
@@ -108,10 +108,10 @@ describe('Repositorio: Project', () => {
             const projectEntity = mockProjectEntityRemoveByParamSuccess(projectToFind);
             const projectRepository = createProjectRepository(projectEntity);
             const project = await projectRepository.removeById(projectToFind[0]._id);
+            expect.assertions(3);
             expect(projectEntity.find).toBeCalledWith({_id: projectToFind[0]._id});
             expect(projectEntity.remove).toBeCalledWith({_id: projectToFind[0]._id})
             expect(project).toEqual(projectToFind[0]);
-            expect.assertions(3);
         })
     })
 });
