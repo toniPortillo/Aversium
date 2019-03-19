@@ -25,12 +25,14 @@ module.exports = projectRepository => {
             if(projectToCreate.length !== 0) {
                 const validation =  await _validations(projectToCreate);
                 if(validation === "Successful validation") {
-                    const projectCreated = {
-                      project: await projectRepository.create(projectToCreate.projectname,
+                    const project = await projectRepository.create(projectToCreate.projectname,
                         projectToCreate.responsable, projectToCreate.productBacklog, projectToCreate.kanban,
-                        projectToCreate.client, projectToCreate.deadline),
-                      message: "Proyecto creado exitosamente"
-                    }
+                        projectToCreate.client, projectToCreate.deadline);
+                    if(project.message === "Proyecto ya existente") throw new Error("Proyecto ya existente"); 
+                    const projectCreated = {
+                        project: project,
+                        message: "Proyecto creado exitosamente"
+                    };
                     return projectCreated;
                 }
             }else {
