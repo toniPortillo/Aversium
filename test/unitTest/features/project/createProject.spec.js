@@ -13,7 +13,7 @@ const mockProjectRepositoryCreateExits = (projectCreated) => ({
     create: jest.fn(() => new Promise((reject) => reject(new Error('Proyecto ya existente'))))
 });
 
-describe('Action createProject', () => {
+describe('Action Project', () => {
     describe('Metodo createProject', () => {
         it('Debe crear un proyecto, si todo esta correcto', async () => {
             const user = {_id: "_id"};
@@ -37,7 +37,7 @@ describe('Action createProject', () => {
             
             const projectRepository = mockProjectRepositoryCreateSuccess(projectToCreate);
             const projectAction = createProject(projectRepository);
-            const project =  await projectAction(projectToCreate);
+            const project = await projectAction(projectToCreate);
             expect.assertions(2);
             expect(projectRepository.create).toBeCalledWith(projectToCreate.projectname,
                 projectToCreate.responsable, projectToCreate.productBacklog, projectToCreate.kanban,
