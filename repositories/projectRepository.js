@@ -18,13 +18,17 @@ module.exports = projectEntity => ({
         }
     },
     getAll: async () => {
-        const query = {};
-        const list  = await projectEntity.find(query);
-        
-        if(list.length !== 0) {
-            return list;
-        }else {
-            throw new Error("Lista de proyectos vacia");
+        try {
+            const query = {};
+            const list  = await projectEntity.find(query);
+            
+            if(list !== undefined) {
+                return list;
+            }else {
+                throw new Error("Lista de proyectos no definida");
+            }
+        }catch (err) {
+            throw err;
         }
     },
     findOneByName: async (projectname) => {

@@ -2,17 +2,17 @@
 module.exports = projectRepository => {
     const _validations = (projectToCreate) => {
         return new Promise((resolve, reject) => {
-            if(!projectToCreate.projectname || typeof projectToCreate.projectname !== 'string')
+            if(projectToCreate.projectname === undefined || typeof projectToCreate.projectname !== 'string')
             reject(new Error("Error: en el nombre del proyecto"));
-            else if(!projectToCreate.responsable || typeof projectToCreate.responsable !== 'object' )
+            else if(projectToCreate.responsable === undefined|| typeof projectToCreate.responsable !== 'object' )
             reject(new Error("Error: en el responsable del proyecto"));
-            else if(!projectToCreate.productBacklog || typeof projectToCreate.productBacklog !== 'object') 
+            else if(projectToCreate.productBacklog === undefined || typeof projectToCreate.productBacklog !== 'object') 
             reject(new Error("Error: en el productBacklog del proyecto"));
-            else if(!projectToCreate.kanban || typeof projectToCreate.kanban !== 'object')
+            else if(projectToCreate.kanban === undefined|| typeof projectToCreate.kanban !== 'object')
             reject(new Error("Error: en el kanban del proyecto"));
-            else if(!projectToCreate.client || typeof projectToCreate.client !== 'string')
+            else if(projectToCreate.client === undefined|| typeof projectToCreate.client !== 'string')
             reject(new Error("Error: en el cliente del proyecto"));
-            else if(!projectToCreate.deadline || typeof projectToCreate.deadline !== 'object')
+            else if(projectToCreate.deadline === undefined || typeof projectToCreate.deadline !== 'object')
             reject(new Error("Error: en el deadline del proyecto"));
             else {
                 let message = "Successful validation";
