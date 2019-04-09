@@ -22,7 +22,7 @@ module.exports = projectRepository => {
             if(projectList instanceof Error) throw new Error(projectList.message);
             const listTeamProjects = await teamProjects(projectList, team);
             return listTeamProjects;
-        }catch (err){
+        }catch(err) {
             throw err;
         }
     };

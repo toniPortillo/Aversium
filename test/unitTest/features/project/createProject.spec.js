@@ -1,3 +1,4 @@
+'use strict';
 const createProject = require('../../../../actions/project/createProject');
 
 const mockProjectRepositoryCreateSuccess = (projectCreated) => ({
