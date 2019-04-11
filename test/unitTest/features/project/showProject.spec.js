@@ -70,6 +70,61 @@ describe('Action project', () => {
             }catch(err) {
             }
         });
+        it('Debe devolver error, si el usuario no pertenece a equipos del proyecto', async () => {
+            expect.assertions(2);
+            try {
+                const user = {_id: "_id"};
+                const userTeam2 = {
+                    _id: "_id3",
+                    username: "USERNAME3"
+                };
+                const users1 = [
+                    {
+                        _id: "_id1",
+                        username: "USERNAME1"},
+                    {
+                        _id: "_id2",
+                        username: "USERNAME2"
+                    }];
+                const users2 = [
+                    {
+                        _id: "_id3",
+                        username: "USERNAME3"
+                    },
+                    {
+                        _id: "_id4",
+                        username: "USERNAME4"
+                    }];
+                const team1 = {
+                    teamname: "TEAMNAME1",
+                    users: users1
+                };
+                const team2 = {
+                    teamname: "TEAMNAME2",
+                    users: users2
+                };
+                const productBacklog = {_id: "_id"};
+                const kanban = {_id: "_id"};
+                const project = {
+                    _id: "_idProject",
+                    projectname: "PROJECTNAME",
+                    teams: [team1],
+                    responsable: user,
+                    productBacklog: productBacklog,
+                    kanban: kanban,
+                    sprints: [],
+                    client: "PROJECTCLIENT",
+                    startdate: new Date,
+                    deadline: new Date
+                };
+                const projectRepository = mockProjectRepositoryfindOneByNameSuccess(project);
+                const projectAction = showProject(projectRepository);
+                const resultingProject = await projectAction(project.projectname, userTeam2);
+            }catch(err) {
+                expect(err.message).toEqual("El usuario no pertenece a equipos del proyecto");
+                expect(err instanceof Error).toBeTruthy();
+            }
+        });
         it('Debe devolver error, si el nombre del proyecto no esta definido', async () => {
             expect.assertions(2);
             try {
@@ -142,61 +197,6 @@ describe('Action project', () => {
             }catch(err) {
                 expect(err.message).toEqual("Proyecto o usuario no definidos");
                 expect(err instanceof Error).toBeTruthy();
-            }
-        });
-        it('Debe devolver error, si el usuario no pertenece a equipos del proyecto', async () => {
-            expect.assertions(2);
-            try {
-                const user = {_id: "_id"};
-                const userTeam2 = {
-                    _id: "_id3",
-                    username: "USERNAME3"
-                };
-                const users1 = [
-                    {
-                        _id: "_id1",
-                        username: "USERNAME1"},
-                    {
-                        _id: "_id2",
-                        username: "USERNAME2"
-                    }];
-                const users2 = [
-                    {
-                        _id: "_id3",
-                        username: "USERNAME3"
-                    },
-                    {
-                        _id: "_id4",
-                        username: "USERNAME4"
-                    }];
-                const team1 = {
-                    teamname: "TEAMNAME1",
-                    users: users1
-                };
-                const team2 = {
-                    teamname: "TEAMNAME2",
-                    users: users2
-                };
-                const productBacklog = {_id: "_id"};
-                const kanban = {_id: "_id"};
-                const project = {
-                    _id: "_idProject",
-                    projectname: "PROJECTNAME",
-                    teams: [team1, team2],
-                    responsable: user,
-                    productBacklog: productBacklog,
-                    kanban: kanban,
-                    sprints: [],
-                    client: "PROJECTCLIENT",
-                    startdate: new Date,
-                    deadline: new Date
-                };
-                const projectRepository = mockProjectRepositoryfindOneByNameSuccess(project);
-                const projectAction = showProject(projectRepository);
-                const resultingProject = await projectAction(project.projectname, userTeam2);
-            }catch(err) {
-                expect(err.message).toEqual("El usuario no pertenece a equipos del proyecto");
-                expect(err instanceof Erro).toBeTruthy();
             }
         });
     });
