@@ -1,17 +1,28 @@
 'use strict';
 module.exports = projectRepository => {
     const validateResponsable = (project, responsable) => {
-        if(project === undefined) throw new Error("Proyecto no definido");
-        if(user === undefined) throw new Error("Responsable no definido")
+        return new Promise((resolve, reject) => {
+            if(project === undefined) reject(new Error("Proyecto no definido"));
+            if(responsable === undefined) reject(new Error("Responsable no definido"));
+            if(project.responsable._id === responsable._id) resolve(project);
+            reject(new Error ("No puede eliminar el proyecto, por no ser su responable"));
+        });
     };
+    
     return async (project, user) => {
         try {
-            if(projectId === undefined) throw new Error("Id del proyecto no definido");
+            if(project === undefined) throw new Error("Proyecto no definido");
             const removeProjectValidated = await validateResponsable(project, user);
-            const project = await projectRepository.removeById(projectId);
-            if(project instanceof Error) throw new Error(project.message);
+            if(removeProjectValidated instanceof Error) throw new Error(removeProjectValidated.message);
+            const projectDeleted = await projectRepository.removeById(project._id);
+            if(projectDeleted instanceof Error) throw new Error(projectDeleted.message);
+            const projectRemoved = {
+                project: projectDeleted,
+                message: "Proyecto eliminado exitosamente"
+            } 
+            return projectRemoved;
         }catch(err) {
-
+            throw err;
         }
     };
 };
