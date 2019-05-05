@@ -18,6 +18,10 @@ const mockProjectEntityRemoveByParamSuccess = (projectFound) => ({
     remove: jest.fn(() => new Promise((resolve) => resolve(projectFound[0])))
 });
 
+const mockProjectEntityModifyTeamSuccess = (projectFound, projectModify) => ({
+    find: jest.fn(() => new Promise(resolve => resolve(projectFound))),
+    findOneAndUpdate: jest.fn(() => new Promise(resolve => resolve(projectModify)))
+});
 
 describe('Repositorio: Project', () => {
     describe('Metodo create', () => {
@@ -113,5 +117,64 @@ describe('Repositorio: Project', () => {
             expect(projectEntity.remove).toBeCalledWith({_id: projectToFind[0]._id})
             expect(project).toEqual(projectToFind[0]);
         })
-    })
+    });
+
+    describe('Metodo modifyTeam', () => {
+        it('Debe permitir añadir un equipo al proyecto', async () => {
+            expect.assertions(3);
+            const projectToModify = [{
+                _id: "PROJECTID",
+                teams: []
+            }];
+            
+            const team1 = {
+                _id: "TEAMID",
+                teamname: "TEAMNAME"
+            };
+
+            const projectModify = [{
+                _id: "PROJECTID",
+                teams: [team1]
+            }];
+            try {
+                const projectEntity = mockProjectEntityModifyTeamSuccess(projectToModify, projectModify);
+                const projectRepository = createProjectRepository(projectEntity);
+                const project = await projectRepository.modifyTeam(projectToModify[0]._id, team1);
+                expect(projectEntity.find).toBeCalledWith({_id: projectToModify[0]._id});
+                expect(projectEntity.findOneAndUpdate).toBeCalledWith({_id: projectToModify[0]._id}, {teams: team1});
+                expect(project).toEqual(projectModify);
+            }catch(err) {
+                throw err;
+            }
+        }),
+        it('Debe permitir borrar un equipo al proyecto', async () => {
+            expect.assertions(3);
+
+            const team1 = {
+                _id: "TEAMID",
+                teamname: "TEAMNAME"
+            };
+
+            const projectToModify = [{
+                _id: "PROJECTID",
+                teams: [team1]
+            }];
+
+            const projectModify = [{
+                _id: "PROJECTID",
+                teams: []
+            }];
+
+            try {
+                const projectEntity = mockProjectEntityModifyTeamSuccess(projectToModify, projectModify);
+                const projectRepository = createProjectRepository(projectEntity);
+                const project = await projectRepository.modifyTeam(projectToModify[0]._id, team1);
+                expect(projectEntity.find).toBeCalledWith({_id: projectToModify[0]._id});
+                expect(projectEntity.findOneAndUpdate).toBeCalledWith({_id: projectToModify[0]._id}, {teams: team1});
+                expect(project).toEqual(projectModify);
+            }catch(err) {
+                throw err;
+            }
+        })
+    });
 });
