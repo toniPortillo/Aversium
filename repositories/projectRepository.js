@@ -66,7 +66,17 @@ module.exports = projectEntity => ({
         try {
             const projectFound = await projectEntity.find(query);
             if(projectFound.length !== 0) return await projectEntity.findOneAndUpdate(query, {teams: teams});
-            throw new Error("Proyecto no encontrado. No, se realizó el cambio en el proyecto");
+            throw new Error("Proyecto no encontrado. No, se realizó cambio en los equipos del proyecto");
+        }catch(err) {
+            throw err;
+        }
+    },
+    modifySprint: async (_id, sprints) => {
+        const query ={_id: _id};
+        try {
+            const projectFound = await projectEntity.find(query);
+            if(projectFound.length !== 0) return await projectEntity.findOneAndUpdate(query, {sprints: sprints});
+            throw new Error("Proyecto no encontrado. No, se realizó cambio en los sprints del proyecto");
         }catch(err) {
             throw err;
         }

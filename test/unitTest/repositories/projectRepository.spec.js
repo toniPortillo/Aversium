@@ -23,6 +23,11 @@ const mockProjectEntityModifyTeamSuccess = (projectFound, projectModify) => ({
     findOneAndUpdate: jest.fn(() => new Promise(resolve => resolve(projectModify)))
 });
 
+const mockProjectEntityModifySprintSuccess = (projectFound, projectModify) => ({
+    find: jest.fn(() => new Promise(resolve => resolve(projectFound))),
+    findOneAndUpdate: jest.fn(() => new Promise(resolve => resolve(projectModify)))
+});
+
 describe('Repositorio: Project', () => {
     describe('Metodo create', () => {
         it('Debe guardar un proyecto en la bd, si este no existe', async () => {
@@ -177,4 +182,35 @@ describe('Repositorio: Project', () => {
             }
         })
     });
+    describe('Metodo modifySprint', () => {
+        it('Debe permitir añadir un sprint al proyecto', async () => {
+            expect.assertions(3);
+
+            const projectToModify = [{
+                _id: "PROJECTID",
+                sprints: []
+            }];
+
+            const sprint1 = [{
+                _id: "SPRINTID"
+            }];
+
+            const projectModify = [{
+                _id: "PROJECTID",
+                sprints: [sprint1]
+            }];
+
+            try {
+                const projectEntity = mockProjectEntityModifySprintSuccess(projectToModify, projectModify);
+                const projectRepository = createProjectRepository(projectEntity);
+                const project = await projectRepository.modifySprint(projectToModify[0]._id, sprint1);
+                expect(projectEntity.find).toBeCalledWith({_id: projectToModify[0]._id});
+                expect(projectEntity.findOneAndUpdate).toBeCalledWith({_id: projectToModify[0]._id}, {sprints: sprint1});
+                expect(project).toEqual(projectModify);
+            }catch(err) {
+                throw err;
+            }
+            
+        })
+    })
 });
