@@ -211,6 +211,34 @@ describe('Repositorio: Project', () => {
                 throw err;
             }
             
+        }),
+        it('Debe permitir borrar un sprint del proyecto', async () => {
+            expect.assertions(3);
+
+            const sprint1 = [{
+                _id: "SPRINTID"
+            }];
+
+            const projectToModify = [{
+                _id: "PROJECTID",
+                sprints: [sprint1]
+            }];
+
+            const projectModify = [{
+                _id: "PROJECTID",
+                sprints: []
+            }];
+
+            try {
+                const projectEntity = mockProjectEntityModifySprintSuccess(projectToModify, projectModify);
+                const projectRepository = createProjectRepository(projectEntity);
+                const project = await projectRepository.modifySprint(projectToModify[0]._id, sprint1);
+                expect(projectEntity.find).toBeCalledWith({_id: projectToModify[0]._id});
+                expect(projectEntity.findOneAndUpdate).toBeCalledWith({_id: projectToModify[0]._id}, {sprints: sprint1});
+                expect(project).toEqual(projectModify);
+            }catch(err) {
+                throw err;
+            }
         })
     })
 });
