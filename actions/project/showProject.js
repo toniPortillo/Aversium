@@ -16,7 +16,7 @@ module.exports = projectRepository => {
                 }
             }, 0);
         });
-    }
+    };
 
     return async (projectName, user) => {
         try {

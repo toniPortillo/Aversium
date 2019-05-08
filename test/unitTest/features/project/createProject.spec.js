@@ -38,10 +38,10 @@ describe('Action Project', () => {
             
             const projectRepository = mockProjectRepositoryCreateSuccess(projectToCreate);
             const projectAction = createProject(projectRepository);
-            const project = await projectAction(projectToCreate);
+            const project = await projectAction(projectToCreate, user);
             expect.assertions(2);
             expect(projectRepository.create).toBeCalledWith(projectToCreate.projectname,
-                projectToCreate.responsable, projectToCreate.productBacklog, projectToCreate.kanban,
+                user, projectToCreate.productBacklog, projectToCreate.kanban,
                 projectToCreate.client, projectToCreate.deadline);
             expect(project).toEqual(projectCreated);
         });
@@ -65,18 +65,19 @@ describe('Action Project', () => {
             const projectAction = createProject(projectRepository);
             expect.assertions(1);
             try {
-                const project = await projectAction(projectToCreate);
+                const project = await projectAction(projectToCreate, user);
             }catch (error){
                 expect(error instanceof Error).toBeTruthy();
             }
         });
         it('Debe devolver error, si se pasa un proyecto vacio', async () => {
+            const user = {_id: "_id"};
             const projectToCreate = [];
             const projectRepository = mockProjectRepositoryCreateEmpty();
             const projectAction = createProject(projectRepository);
             expect.assertions(2);
             try {
-                const project = await projectAction(projectToCreate);
+                const project = await projectAction(projectToCreate, user);
             }catch(error) {
                 expect(error.message).toEqual("Proyecto vacio");
                 expect(error instanceof Error).toBeTruthy();
@@ -101,10 +102,10 @@ describe('Action Project', () => {
             const projectAction = createProject(projectRepository);
             expect.assertions(3);
             try {
-                const project = await projectAction(projectToCreate);
+                const project = await projectAction(projectToCreate, user);
             }catch(error) {
                 expect(projectRepository.create).toBeCalledWith(projectToCreate.projectname,
-                    projectToCreate.responsable, projectToCreate.productBacklog, projectToCreate.kanban,
+                    user, projectToCreate.productBacklog, projectToCreate.kanban,
                     projectToCreate.client, projectToCreate.deadline);
                 expect(error.message).toEqual("Proyecto ya existente");
                 expect(error instanceof Error).toBeTruthy();

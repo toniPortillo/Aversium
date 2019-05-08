@@ -1,5 +1,5 @@
 'use strict';
-module.exports = projectRepository => {
+module.exports = (projectRepository, teamRepository) => {
     const _validations = (projectToCreate) => {
         return new Promise((resolve, reject) => {
             if(projectToCreate.projectname === undefined || typeof projectToCreate.projectname !== 'string')
@@ -20,13 +20,13 @@ module.exports = projectRepository => {
             }
         });
     }
-    return async projectToCreate => {
+    return async (projectToCreate, user) => {
         try{
             if(projectToCreate.length !== 0) {
                 const validation =  await _validations(projectToCreate);
                 if(validation === "Successful validation") {
                     const project = await projectRepository.create(projectToCreate.projectname,
-                        projectToCreate.responsable, projectToCreate.productBacklog, projectToCreate.kanban,
+                        user, projectToCreate.productBacklog, projectToCreate.kanban,
                         projectToCreate.client, projectToCreate.deadline);
                     if(project.message === "Proyecto ya existente") throw new Error("Proyecto ya existente"); 
                     const projectCreated = {
