@@ -94,5 +94,8 @@ describe('Repositorio: Team', () => {
                 expect(err instanceof Error).toBeTruthy();
             }
         });
+        it('Debe devolver el equipo, si lo encuentra por el nombre', async () => {
+            expect.assertions();
+        });
     });
 });

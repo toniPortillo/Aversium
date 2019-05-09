@@ -27,5 +27,15 @@ module.exports = teamEntity => ({
         }catch(err) {
             throw err;
         }
+    },
+    findOneByName: async teamname => {
+        const query = {teamname: teamname};
+        try {
+            const teamFound = await teamEntity.find(query);
+            if(teamFound.length !== 0) return teamFound;
+            throw new Error("Equipo no encontrado");
+        }catch(err) {
+           throw err; 
+        }
     }
 });
