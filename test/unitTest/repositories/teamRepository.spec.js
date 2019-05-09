@@ -9,6 +9,15 @@ const mockTeamEntityGetAllFailure = listTeams => ({
     find: jest.fn(() => new Promise((resolve, reject) => reject(new Error("Lista de equipos no definida"))))
 });
 
+const mockTeamEntityCreateSuccess = teamCreated => ({
+    find: jest.fn(() => new Promise(resolve => resolve([]))),
+    save: jest.fn(() => new Promise(resolve => resolve(teamCreated)))
+});
+
+const mockTeamEntityCreateFailure = () => ({
+
+});
+
 describe('Repositorio: Team', () => {
     describe('Metodo getAll', () => {
         it('Debe rellenar un array con los equipos', async () => {
@@ -40,6 +49,43 @@ describe('Repositorio: Team', () => {
                 expect(err.message).toEqual("Lista de equipos no definida");
                 expect(err instanceof Error).toBeTruthy();
             }
+        });
+    });
+    describe('Metodo create', () => {
+        it('Debe guardar un proyecto en la bd, si este no existe', async () => {
+            expect.assertions(2);
+            const creator = {
+                _id: "USERID"
+            };
+            const teamToCreate = {
+                teamname: "TEAMNAME",
+                creator: creator,
+                maxmembers: 5,
+                users: [creator]
+            };
+
+            const teamEntity = mockTeamEntityCreateSuccess(teamToCreate);
+            const teamRepository = createTeamRepository(teamEntity);
+            try {
+                const team = await teamRepository.create(teamToCreate.teamname, creator, teamToCreate.maxmembers, 
+                    teamToCreate.users);
+                expect(team).toEqual(teamToCreate);
+                expect(teamEntity.find).toBeCalledWith({teamname: teamToCreate.teamname});
+            }catch(err) {
+                throw err;
+            }
+        });
+        it('Debe devolver error, si el equipo ya existe en la bd', async () => {
+            expect.assertions();
+            const creator = {
+                _id: "USERID"
+            };
+            const teamToCreate = {
+                teamname: "TEAMNAME",
+                creator: creator,
+                maxmembers: 5,
+                users: [creator]
+            };
         });
     });
 });

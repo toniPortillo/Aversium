@@ -2,19 +2,19 @@
 module.exports = teamEntity => ({
     create: async (teamname, creator, maxmembers) => {
         const query = {teamname: teamname};
-        const teamFound = await teamEntity.find(query);
         try {
+            const teamFound = await teamEntity.find(query);
             if(!teamFound.length) {
-                let saveTeam = new teamEntity({
-                    teamname: teamname,
-                    creator: creator,
-                    maxmembers: maxmembers,
-                    users: creator
-                });
-                return await saveTeam.save();
+                teamEntity.teamname = teamname;
+                teamEntity.creator = creator;
+                teamEntity.maxmembers = maxmembers;
+                teamEntity.users = creator;
+                
+                return await teamEntity.save();
             }
-        }catch(err) {
             throw new Error("Equipo ya existente");
+        }catch(err) {
+            throw err;
         };
     },
     getAll: async () => {
