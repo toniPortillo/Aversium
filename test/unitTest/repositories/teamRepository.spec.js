@@ -6,7 +6,7 @@ const mockTeamEntityGetAllSuccess = listTeams => ({
 });
 
 const mockTeamEntityGetAllFailure = listTeams => ({
-    find: jest.fn(() => new Promise((resolve, reject) => reject(new Error("Lista de equipos no definida"))))
+    find: jest.fn(() => new Promise(resolve => resolve(listTeams)))
 });
 
 const mockTeamEntityCreateSuccess = teamCreated => ({
@@ -16,6 +16,22 @@ const mockTeamEntityCreateSuccess = teamCreated => ({
 
 const mockTeamEntityCreateFailure = teamCreated => ({
     find: jest.fn(() => new Promise(resolve => resolve([teamCreated])))
+});
+
+const mockTeamEntityFindByNameSuccess = teamFound => ({
+    find: jest.fn(() => new Promise(resolve => resolve(teamFound)))
+});
+
+const mockTeamEntityFindByNameFailure = teamFound => ({
+    find: jest.fn(() => new Promise(resolve => resolve(teamFound)))
+});
+
+const mockTeamEntityFindByIdSuccess = teamFound => ({
+    find: jest.fn(() => new Promise(resolve => resolve(teamFound)))
+});
+
+const mockTeamEntityFindByIdFailure = teamFound => ({
+    find: jest.fn(() => new Promise(resolve => resolve(teamFound)))
 });
 
 describe('Repositorio: Team', () => {
@@ -94,8 +110,63 @@ describe('Repositorio: Team', () => {
                 expect(err instanceof Error).toBeTruthy();
             }
         });
+    });
+    describe('Metodo findOneByName', () => {
         it('Debe devolver el equipo, si lo encuentra por el nombre', async () => {
-            expect.assertions();
+            expect.assertions(2);
+            const teamFound = [{
+                teamname: "TEAMNAME"
+            }];
+            const teamEntity = mockTeamEntityFindByNameSuccess(teamFound);
+            const teamRepository = createTeamRepository(teamEntity);
+            try {
+                const team = await teamRepository.findOneByName(teamFound.teamname);
+                expect(team).toEqual(teamFound);
+                expect(teamEntity.find).toBeCalledWith({teamname: teamFound.teamname});
+            }catch(err) {
+                throw err;
+            };
+        });
+        it('Debe devolver un error, si no encuentra el equipo por el nombre', async () => {
+            expect.assertions(2);
+            const teamFound = [];
+            const teamEntity = mockTeamEntityFindByNameFailure(teamFound);
+            const teamRepository = createTeamRepository(teamEntity);
+            try {
+                const team = await teamRepository.findOneByName();
+            }catch(err) {
+                expect(err.message).toEqual("Equipo no encontrado");
+                expect(err instanceof Error).toBeTruthy();
+            };
+        })
+    });
+    describe('Metodo findOneById', () => {
+        it('Debe devolver el equipo, si lo encuentra por el id', async () => {
+            expect.assertions(2);
+            const teamFound = [{
+                _id: "teamID"
+            }];
+            const teamEntity = mockTeamEntityFindByIdSuccess(teamFound);
+            const teamRepository = createTeamRepository(teamEntity);
+            try {
+                const team = await teamRepository.findOneById(teamFound._id);
+                expect(team).toEqual(teamFound);
+                expect(teamEntity.find).toBeCalledWith({_id: teamFound._id});
+            }catch(err) {
+                throw err;
+            };
+        });
+        it('Debe devolver un error, si no encuentra el equipo por el id', async () => {
+            expect.assertions(2);
+            const teamFound = [];
+            const teamEntity = mockTeamEntityFindByIdFailure(teamFound);
+            const teamRepository = createTeamRepository(teamEntity);
+            try{
+                const team = await teamRepository.findOneById();
+            }catch(err) {
+                expect(err.message).toEqual("Equipo no encontrado");
+                expect(err instanceof Error).toBeTruthy();
+            }
         });
     });
 });

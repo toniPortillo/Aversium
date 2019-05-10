@@ -26,7 +26,7 @@ module.exports = teamEntity => ({
             throw new Error("Lista de equipos no definida");
         }catch(err) {
             throw err;
-        }
+        };
     },
     findOneByName: async teamname => {
         const query = {teamname: teamname};
@@ -36,6 +36,16 @@ module.exports = teamEntity => ({
             throw new Error("Equipo no encontrado");
         }catch(err) {
            throw err; 
-        }
+        };
+    },
+    findOneById: async _id => {
+        const query = {_id: _id};
+        try {
+            const teamFound = await teamEntity.find(query);
+            if(teamFound.length !== 0) return teamFound;
+            throw new Error("Equipo no encontrado");
+        }catch(err) {
+            throw err;
+        };
     }
 });
