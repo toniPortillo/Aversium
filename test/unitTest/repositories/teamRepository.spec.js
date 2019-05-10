@@ -34,6 +34,15 @@ const mockTeamEntityFindByIdFailure = teamFound => ({
     find: jest.fn(() => new Promise(resolve => resolve(teamFound)))
 });
 
+const mockTeamEntityRemoveByIdSuccess = teamToRemove => ({
+    find: jest.fn(() => new Promise(resolve => resolve(teamToRemove))),
+    remove: jest.fn(() => new Promise(resolve => resolve(teamToRemove[0])))
+});
+
+const mockTeamEntityRemoveByIdFailure = teamToRemove => ({
+    find: jest.fn(() => new Promise(resolve => resolve([])))
+});
+
 describe('Repositorio: Team', () => {
     describe('Metodo getAll', () => {
         it('Debe rellenar un array con los equipos', async () => {
@@ -120,9 +129,9 @@ describe('Repositorio: Team', () => {
             const teamEntity = mockTeamEntityFindByNameSuccess(teamFound);
             const teamRepository = createTeamRepository(teamEntity);
             try {
-                const team = await teamRepository.findOneByName(teamFound.teamname);
+                const team = await teamRepository.findOneByName(teamFound[0].teamname);
                 expect(team).toEqual(teamFound);
-                expect(teamEntity.find).toBeCalledWith({teamname: teamFound.teamname});
+                expect(teamEntity.find).toBeCalledWith({teamname: teamFound[0].teamname});
             }catch(err) {
                 throw err;
             };
@@ -149,9 +158,9 @@ describe('Repositorio: Team', () => {
             const teamEntity = mockTeamEntityFindByIdSuccess(teamFound);
             const teamRepository = createTeamRepository(teamEntity);
             try {
-                const team = await teamRepository.findOneById(teamFound._id);
+                const team = await teamRepository.findOneById(teamFound[0]._id);
                 expect(team).toEqual(teamFound);
-                expect(teamEntity.find).toBeCalledWith({_id: teamFound._id});
+                expect(teamEntity.find).toBeCalledWith({_id: teamFound[0]._id});
             }catch(err) {
                 throw err;
             };
@@ -165,6 +174,36 @@ describe('Repositorio: Team', () => {
                 const team = await teamRepository.findOneById();
             }catch(err) {
                 expect(err.message).toEqual("Equipo no encontrado");
+                expect(err instanceof Error).toBeTruthy();
+            }
+        });
+    });
+    describe('Metodo removeById', () => {
+        it('Debe eliminar el equipo, si lo encuentra por el id', async () => {
+            expect.assertions(3);
+            const teamToRemove = [{
+                _id: "teamID"
+            }];
+            const teamEntity = mockTeamEntityRemoveByIdSuccess(teamToRemove);
+            const teamRepository = createTeamRepository(teamEntity);
+            try {
+                const teamRemove = await teamRepository.removeById(teamToRemove[0]._id);
+                expect(teamRemove).toEqual(teamToRemove[0]);
+                expect(teamEntity.find).toBeCalledWith({_id: teamToRemove[0]._id});
+                expect(teamEntity.remove).toBeCalledWith({_id: teamToRemove[0]._id});
+            }catch(err) {
+                throw err;
+            };
+        });
+        it('Debe devolver un error, si no encuentra el proyecto para ser borrado', async () => {
+            expect.assertions(2);
+            const teamToRemove = [];
+            const teamEntity = mockTeamEntityRemoveByIdFailure(teamToRemove);
+            const teamRepository = createTeamRepository(teamEntity);
+            try {
+                const teamRemove = await teamRepository.removeById();
+            }catch(err) {
+                expect(err.message).toEqual("Equipo no encontrado. No, se realizó el borrado del equipo");
                 expect(err instanceof Error).toBeTruthy();
             }
         });

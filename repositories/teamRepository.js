@@ -47,5 +47,15 @@ module.exports = teamEntity => ({
         }catch(err) {
             throw err;
         };
+    },
+    removeById: async _id => {
+        const query = {_id: _id};
+        try {
+            const teamFound = await teamEntity.find(query);
+            if(teamFound.length !== 0) return await teamEntity.remove({_id: teamFound[0]._id});
+            throw new Error("Equipo no encontrado. No, se realizó el borrado del equipo");
+        }catch(err) {
+            throw err;
+        }
     }
 });
