@@ -57,5 +57,15 @@ module.exports = teamEntity => ({
         }catch(err) {
             throw err;
         }
+    },
+    modifyUsers: async (_id, users) => {
+        const query = {_id: _id};
+        try{
+            const teamFound = await teamEntity.find(query);
+            if(teamFound.length !== 0) return await teamEntity.findOneAndUpdate(query, {users: users})
+            throw new Error("Equipo no encontrado. No, se realizó cambio en los usuarios del equipo");
+        }catch(err) {
+            throw err;
+        }
     }
 });
