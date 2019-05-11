@@ -43,6 +43,15 @@ const mockTeamEntityRemoveByIdFailure = teamToRemove => ({
     find: jest.fn(() => new Promise(resolve => resolve([])))
 });
 
+const mockTeamEntityModifyUsersSuccess = (teamToModify, teamModify) => ({
+    find: jest.fn(() => new Promise(resolve => resolve(teamToModify))),
+    findOneAndUpdate: jest.fn(() => new Promise(resolve => resolve(teamModify)))
+});
+
+const mockTeamEntityModifyUsersFailure = teamToModify => ({
+    find: jest.fn(() => new Promise(resolve => resolve(teamToModify)))
+});
+
 describe('Repositorio: Team', () => {
     describe('Metodo getAll', () => {
         it('Debe rellenar un array con los equipos', async () => {
@@ -206,6 +215,51 @@ describe('Repositorio: Team', () => {
                 expect(err.message).toEqual("Equipo no encontrado. No, se realizó el borrado del equipo");
                 expect(err instanceof Error).toBeTruthy();
             }
+        });
+    });
+    describe('Metodo modifyUsers', () => {
+        it('Debe modificar los usuarios del equipo, si este existe', async () => {
+            expect.assertions(3);
+            const teamToModify = [{
+                _id: "teamID",
+                users: []
+            }];
+            const user1 = {
+                _id: "user1ID"
+            };
+            const user2 = {
+                _id: "user2ID"
+            };
+            const users = [
+                user1,
+                user2
+            ];
+            const teamModify = {
+                _id: "teamID",
+                users: users
+            }
+            const teamEntity = mockTeamEntityModifyUsersSuccess(teamToModify, teamModify);
+            const teamRepository = createTeamRepository(teamEntity);
+            try {
+                const teamModified = await teamRepository.modifyUsers(teamToModify[0]._id, users);
+                expect(teamModified).toEqual(teamModify);
+                expect(teamEntity.find).toBeCalledWith({_id: teamToModify[0]._id});
+                expect(teamEntity.findOneAndUpdate).toBeCalledWith({_id: teamToModify[0]._id}, {users: users})
+            }catch(err) {
+                throw err;
+            };
+        });
+        it('Debe devolver un error, si el equipo no es encontradado para realizar la modificacion', async () => {
+            expect.assertions(2);
+            const teamToModify = [];
+            const teamEntity = mockTeamEntityModifyUsersFailure(teamToModify);
+            const teamRepository = createTeamRepository(teamEntity);
+            try {
+                const teamModified = await teamRepository.modifyUsers();
+            }catch(err) {
+                expect(err.message).toEqual("Equipo no encontrado. No, se realizó cambio en los usuarios del equipo");
+                expect(err instanceof Error).toBeTruthy();
+            };
         });
     });
 });
