@@ -19,7 +19,7 @@ module.exports = teamRepository => {
     
     return async (teamToCreate, user) => {
         try {
-            if(teamToCreate.length === 0 || teamToCreate === undefined) throw new Error("Equipo vacio");
+            if(teamToCreate === undefined || teamToCreate.length === 0) throw new Error("Equipo vacio");
             const validation = await _validations(teamToCreate);
             if(validation !== "Successful validation") throw new Error("Equipo no valido");
             const team = await teamRepository.create(teamToCreate.teamname, user, teamToCreate.maxmembers);

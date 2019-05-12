@@ -109,7 +109,7 @@ describe('Action Project', () => {
                     projectToCreate.client, projectToCreate.deadline);
                 expect(error.message).toEqual("Proyecto ya existente");
                 expect(error instanceof Error).toBeTruthy();
-            }
-        })
+            };
+        });
     });
 });
