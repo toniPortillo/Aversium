@@ -33,6 +33,7 @@ describe('Action team', () => {
                 throw err;
             };
         });
+        
         it('Debe devolver error, si el creador no esta definido', async () => {
             expect.assertions(2);
             const user = undefined;
@@ -51,6 +52,7 @@ describe('Action team', () => {
                 expect(err instanceof Error).toBeTruthy();
             };
         });
+
         it('Debe devolver error, si el equipo no esta definido', async () => {
             expect.assertions(2);
             const teamToDelete = undefined;
@@ -62,6 +64,7 @@ describe('Action team', () => {
                 expect(err instanceof Error).toBeTruthy();
             };
         });
+
         it('Debe devolver error, si el usuario intentar eliminar el equipo sin ser su creador', async () => {
             expect.assertions(2);
             const user = [{
