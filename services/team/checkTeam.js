@@ -87,7 +87,7 @@ module.exports = (team, newMember)=> {
         };
     };
 
-    async () => {
+    return async () => {
         try {
             await setProductOwner(team.users);
             await setScrumMaster(team.users);
