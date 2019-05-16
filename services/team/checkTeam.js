@@ -14,10 +14,9 @@ module.exports = (team, newMember)=> {
                     if(userTeam.role === 'productOwner') {
                         availableDevelopers = availableDevelopers + 1;
                         resolve(productOwner = 1); 
-                    };
+                    }else resolve(productOwner)
                 });
             }, 0);
-            resolve(productOwner)
         });
     };
     
@@ -29,10 +28,9 @@ module.exports = (team, newMember)=> {
                     if(userTeam.role === 'scrumMaster') {
                         availableDevelopers = availableDevelopers + 1;
                         resolve(scrumMaster = 1);
-                    };
+                    }else resolve(scrumMaster);
                 });
             }, 0);
-            resolve(scrumMaster);
         });
     };
 
@@ -42,9 +40,9 @@ module.exports = (team, newMember)=> {
             setTimeout(() => {
                 usersTeam.forEach(userTeam => {
                     if(userTeam.email === user.email) resolve(developer = 1);
+                    else resolve(developer);
                 });
             }, 0);
-            resolve(developer);
         });
     };
 
