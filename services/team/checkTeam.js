@@ -35,7 +35,8 @@ module.exports = (team, newMember)=> {
     };
 
     const setDeveloper = (usersTeam, user) => {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject)=> {
+            if(user === undefined) reject(new Error("Usuario no definido"));
             if(usersTeam.length === 0) resolve(developer);
             setTimeout(() => {
                 usersTeam.forEach(userTeam => {
