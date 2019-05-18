@@ -10,17 +10,12 @@ module.exports = (teamRepository, checkTeamService) => {
         });
     };
 
-    return async (team, user, param) => {
+    return async (team, user, newMember) => {
         if(team === undefined) throw new Error("Equipo no definido");
         try {
             const modifyTeamValidated = await validateCreator(team, user);
             if(modifyTeamValidated instanceof Error) throw new Error(modifyTeamValidated.message);
-            if(param instanceof Number) teamRepository.modifyMembersNumber(modifyTeamValidated[0]._id, param);
-            else if(param instanceof Object) {
-                const checkTeam = checkTeamService(modifyTeamValidated[0], param[0]);
-                const memberValidated = await checkTeam();          
-                teamRepository.modifyUsers(modifyTeamValidated[0]._id, param);
-            }
+            const checkTeam = checkTeamService(team[0], user [0])
         }catch(err) {
             throw err;
         };
