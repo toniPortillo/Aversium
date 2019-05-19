@@ -1,13 +1,19 @@
-module.exports = (userEntity) => ({
+module.exports = (userEntity, encryptor, passwordComparer) => ({
     create: async (username, email, password, role) => {
         const query = { email };
-        const userFound = await userEntity.find(query);
+        const foundUser = await userEntity.find(query);
 
-        if(!userFound.length) {
-
-            return await userEntity.save();
-        } else {    
-            throw new Error("Usuario ya existente");
-        }
+        try {
+            const hash = await encryptor(password);
+            if(!foundUser.length) {
+                userEntity.username = username;
+                userEntity.email = email;
+                userEntity.password = hash;
+                userEntity.role = role;
+                return await userEntity.save();
+            } else throw new Error("Usuario ya existente");
+        }catch(err) {
+            throw err;
+        };
     }
 });
