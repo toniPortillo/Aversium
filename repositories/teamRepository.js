@@ -51,9 +51,8 @@ module.exports = teamEntity => ({
     removeById: async _id => {
         const query = {_id: _id};
         try {
-            const teamFound = await teamEntity.find(query);
-            if(teamFound.length !== 0) return await teamEntity.remove({_id: teamFound[0]._id});
-            throw new Error("Equipo no encontrado. No, se realizó el borrado del equipo");
+            const deletedTeam = await teamEntity.remove(query);
+            return deletedTeam;
         }catch(err) {
             throw err;
         }
@@ -61,9 +60,8 @@ module.exports = teamEntity => ({
     modifyUsers: async (_id, users) => {
         const query = {_id: _id};
         try{
-            const teamFound = await teamEntity.find(query);
-            if(teamFound.length !== 0) return await teamEntity.findOneAndUpdate(query, {users: users})
-            throw new Error("Equipo no encontrado. No, se realizó cambio en los usuarios del equipo");
+            const modifiedTeam = await teamEntity.findOneAndUpdate(query, {users: users});
+            return modifiedTeam;
         }catch(err) {
             throw err;
         }
@@ -71,9 +69,8 @@ module.exports = teamEntity => ({
     modifyMembersNumber: async (_id, membersNumber) => {
         const query = {_id: _id};
         try {
-            const teamFound = await teamEntity.find(query);
-            if(teamFound.length !== 0) return await teamEntity.findOneAndUpdate(query, {maxmembers: membersNumber});
-            throw new Error("Equipo no encontrado. No, se realizó cambio en el numero de miembros del equipo");
+            const foundTeam = await teamEntity.findOneAndUpdate(query, {maxmembers: membersNumber});
+            return foundTeam;
         }catch(err) {
             throw err;
         }

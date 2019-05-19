@@ -35,30 +35,15 @@ const mockTeamEntityFindByIdFailure = teamFound => ({
 });
 
 const mockTeamEntityRemoveByIdSuccess = teamToRemove => ({
-    find: jest.fn(() => new Promise(resolve => resolve(teamToRemove))),
     remove: jest.fn(() => new Promise(resolve => resolve(teamToRemove[0])))
 });
 
-const mockTeamEntityRemoveByIdFailure = teamToRemove => ({
-    find: jest.fn(() => new Promise(resolve => resolve([])))
-});
-
 const mockTeamEntityModifyUsersSuccess = (teamToModify, teamModify) => ({
-    find: jest.fn(() => new Promise(resolve => resolve(teamToModify))),
     findOneAndUpdate: jest.fn(() => new Promise(resolve => resolve(teamModify)))
-});
-
-const mockTeamEntityModifyUsersFailure = teamToModify => ({
-    find: jest.fn(() => new Promise(resolve => resolve(teamToModify)))
 });
 
 const mockTeamEntityModifyMembersNumberSuccess = (teamToModify, teamModify) => ({
-    find: jest.fn(() => new Promise(resolve => resolve(teamToModify))),
     findOneAndUpdate: jest.fn(() => new Promise(resolve => resolve(teamModify)))
-});
-
-const mockTeamEntityModifyMembersNumberFailure = teamToModify => ({
-    find: jest.fn(() => new Promise(resolve => resolve(teamToModify)))
 });
 
 describe('Repositorio: Team', () => {
@@ -202,7 +187,7 @@ describe('Repositorio: Team', () => {
 
     describe('Metodo removeById', () => {
         it('Debe eliminar el equipo, si lo encuentra por el id', async () => {
-            expect.assertions(3);
+            expect.assertions(2);
             const teamToRemove = [{
                 _id: "teamID"
             }];
@@ -211,29 +196,16 @@ describe('Repositorio: Team', () => {
             try {
                 const teamRemove = await teamRepository.removeById(teamToRemove[0]._id);
                 expect(teamRemove).toEqual(teamToRemove[0]);
-                expect(teamEntity.find).toBeCalledWith({_id: teamToRemove[0]._id});
                 expect(teamEntity.remove).toBeCalledWith({_id: teamToRemove[0]._id});
             }catch(err) {
                 throw err;
             };
         });
-        it('Debe devolver un error, si no encuentra el proyecto para ser borrado', async () => {
-            expect.assertions(2);
-            const teamToRemove = [];
-            const teamEntity = mockTeamEntityRemoveByIdFailure(teamToRemove);
-            const teamRepository = createTeamRepository(teamEntity);
-            try {
-                const teamRemove = await teamRepository.removeById();
-            }catch(err) {
-                expect(err.message).toEqual("Equipo no encontrado. No, se realizó el borrado del equipo");
-                expect(err instanceof Error).toBeTruthy();
-            }
-        });
     });
 
     describe('Metodo modifyUsers', () => {
         it('Debe modificar los usuarios del equipo, si este existe', async () => {
-            expect.assertions(3);
+            expect.assertions(2);
             const teamToModify = [{
                 _id: "teamID",
                 users: []
@@ -257,29 +229,16 @@ describe('Repositorio: Team', () => {
             try {
                 const teamModified = await teamRepository.modifyUsers(teamToModify[0]._id, users);
                 expect(teamModified).toEqual(teamModify);
-                expect(teamEntity.find).toBeCalledWith({_id: teamToModify[0]._id});
                 expect(teamEntity.findOneAndUpdate).toBeCalledWith({_id: teamToModify[0]._id}, {users: users})
             }catch(err) {
                 throw err;
-            };
-        });
-        it('Debe devolver un error, si el equipo no es encontradado para realizar la modificacion', async () => {
-            expect.assertions(2);
-            const teamToModify = [];
-            const teamEntity = mockTeamEntityModifyUsersFailure(teamToModify);
-            const teamRepository = createTeamRepository(teamEntity);
-            try {
-                const teamModified = await teamRepository.modifyUsers();
-            }catch(err) {
-                expect(err.message).toEqual("Equipo no encontrado. No, se realizó cambio en los usuarios del equipo");
-                expect(err instanceof Error).toBeTruthy();
             };
         });
     });
 
     describe('Metodo modifyMembersNumber', () => {
         it('Debe modificar el numero de miembros del equipo, si este existe', async () => {
-            expect.assertions(3);
+            expect.assertions(2);
             const teamToModify = [{
                 _id: "teamID",
                 maxmembers: 1
@@ -294,23 +253,10 @@ describe('Repositorio: Team', () => {
             try {
                 const teamModified = await teamRepository.modifyMembersNumber(teamToModify[0]._id, membersNumber);
                 expect(teamModified).toEqual(teamModify);
-                expect(teamEntity.find).toBeCalledWith({_id: teamToModify[0]._id});
                 expect(teamEntity.findOneAndUpdate).toBeCalledWith({_id: teamToModify[0]._id}, {maxmembers: membersNumber});
             }catch(err) {
                 throw err;
             };
-        });
-        it('Debe devolver un error, si el equipo no es encontrado para realizar la modificacion', async () => {
-            expect.assertions(2);
-            const teamToModify = [];
-            const teamEntity = mockTeamEntityModifyMembersNumberFailure(teamToModify);
-            const teamRepository = createTeamRepository(teamEntity);
-            try{
-                const teamModified = await teamRepository.modifyMembersNumber();
-            }catch(err) {
-                expect(err.message).toEqual("Equipo no encontrado. No, se realizó cambio en el numero de miembros del equipo");
-                expect(err instanceof Error).toBeTruthy();
-            }
         });
     });
 });

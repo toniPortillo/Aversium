@@ -1,14 +1,21 @@
 'use strict';
 const removeTeam = require('../../../../actions/team/removeTeam');
 
-const mockTeamRepositoryRemoveByIdSuccess = teamRemoved => ({
-    removeById: jest.fn(() => new Promise(resolve => resolve(teamRemoved)))
+const mockTeamRepositoryRemoveByIdSuccess = (teamID,teamToDelete) => ({
+    findOneById: jest.fn(() => new Promise(resolve => resolve(teamToDelete))),
+    removeById: jest.fn(() => new Promise(resolve => resolve(teamToDelete)))
+});
+const mockTeamRepositoryRemoveByIdCreatorUndefined = (teamID, teamToDelete) => ({
+    findOneById: jest.fn(() => new Promise(resolve => resolve(teamToDelete)))
+});
+const mockTeamRepositoryRemoveByIdCreatorError = (teamID, teamToDelete) => ({
+    findOneById: jest.fn(() => new Promise(resolve => resolve(teamToDelete)))
 });
 
 describe('Action team', () => {
     describe('Metodo removeTeam', () => {
         it('Debe devolver el equipo borrado, si este existe', async () => {
-            expect.assertions(2);
+            expect.assertions(3);
             const user = [{
                 _id: "userID"
             }];
@@ -23,11 +30,12 @@ describe('Action team', () => {
                 team: teamToDelete,
                 message: "Equipo eliminado exitosamente"
             };
-            const teamRepository = mockTeamRepositoryRemoveByIdSuccess(teamToDelete);
+            const teamRepository = mockTeamRepositoryRemoveByIdSuccess(teamToDelete[0]._id, teamToDelete);
             const teamAction = removeTeam(teamRepository);
             try {
-                const team = await teamAction(teamToDelete, user);
+                const team = await teamAction(teamToDelete[0]._id, user);
                 expect(team).toEqual(teamRemoved);
+                expect(teamRepository.findOneById).toBeCalledWith(teamToDelete[0]._id);
                 expect(teamRepository.removeById).toBeCalledWith(teamToDelete[0]._id);
             }catch(err) {
                 throw err;
@@ -44,9 +52,10 @@ describe('Action team', () => {
                 maxmembers: 5,
                 users: user
             }];
-            const teamAction = removeTeam();
+            const teamRepository = mockTeamRepositoryRemoveByIdCreatorUndefined(teamToDelete[0]._id, teamToDelete);
+            const teamAction = removeTeam(teamRepository);
             try {
-                const team = await teamAction(teamToDelete, user);
+                const team = await teamAction(teamToDelete[0]._id, user);
             }catch(err) {
                 expect(err.message).toEqual("Creador no definido");
                 expect(err instanceof Error).toBeTruthy();
@@ -60,7 +69,7 @@ describe('Action team', () => {
             try {
                 const team = await teamAction(teamToDelete);
             }catch(err){
-                expect(err.message).toEqual("Equipo no definido");
+                expect(err.message).toEqual("Id de equipo no definido");
                 expect(err instanceof Error).toBeTruthy();
             };
         });
@@ -80,7 +89,8 @@ describe('Action team', () => {
                 maxmembers: 5,
                 users: user1
             }];
-            const teamAction = removeTeam();
+            const teamRepository = mockTeamRepositoryRemoveByIdCreatorError(teamToDelete[0]._id, teamToDelete);
+            const teamAction = removeTeam(teamRepository);
             try {
                 const team = await teamAction(teamToDelete, user);
             }catch(err) {

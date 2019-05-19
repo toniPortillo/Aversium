@@ -10,17 +10,19 @@ module.exports = teamRepository => {
         });
     };
 
-    return async (team, user) => {
-        if(team === undefined) throw new Error("Equipo no definido");
+    return async (teamID, user) => {
+        if(teamID === undefined) throw new Error("Id de equipo no definido");
         try {
-            const removeTeamValidated = await validateCreator(team, user);
+            const foundTeam = await teamRepository.findOneById(teamID);
+            if(foundTeam instanceof Error) throw new Error(foundTeam.message);
+            const removeTeamValidated = await validateCreator(foundTeam, user);
             if(removeTeamValidated instanceof Error) throw new Error(removeTeamValidated.message);
             const teamDeleted = await teamRepository.removeById(removeTeamValidated[0]._id);
             if(teamDeleted instanceof Error) throw new Error(teamDeleted.message);
             const teamRemoved = {
                 team: teamDeleted,
                 message: "Equipo eliminado exitosamente"
-            }
+            };
             return teamRemoved;
         }catch(err) {
             throw err;
