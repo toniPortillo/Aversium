@@ -1,25 +1,65 @@
 const createUserRepository = require('../../../repositories/userRepository');
 
-const mockUserEntitySuccess = (userCreated) => ({
+const mockUserEntitySuccess = (userToCreate, createdUser) => ({
     find: jest.fn(() => new Promise((resolve) => resolve([]))),
-    save: jest.fn(() => new Promise((resolve) => resolve(userCreated)))
-})
+    save: jest.fn(() => new Promise((resolve) => resolve(createdUser)))
+});
 
-describe('Repository: User', () => {
-    describe('Create method', () => {
-        it('should create user if it not exists', async () => {
-            const userToCreate  = {
+const mockUserEntityFind = userList => ({
+    find: jest.fn(() => new Promise(resolve => resolve(userList)))
+});
+
+const mockEncryptorFunction = jest.fn().mockImplementation(hash => () => new Promise(resolve => resolve(hash)));
+
+describe('Repositorio: User', () => {
+    describe('Metodo: create', () => {
+        it('Debe crear un usuario, si este no existe', async () => {
+            expect.assertions(2);
+            const userToCreate = {
                 username: 'USERNAME',
-                email: 'EMAIL',
+                email: 'createduser@aversium.com',
                 password: 'PASSWORD',
-                role: 'ADMIN'
+                role: 'productOwner'
             };
-            const userEntity = mockUserEntitySuccess(userToCreate);
-            const userRepository = createUserRepository(userEntity);
-            const user = await userRepository.create(userToCreate.username, userToCreate.email, userToCreate.password, userToCreate.role);
+            const hash = "ASDLKAJDOAIJDLAISDJ";
+            const createdUser = {
+                _id: "createdUserId",
+                username: 'USERNAME',
+                email: 'createduser@aversium.com',
+                password: hash,
+                role: 'productOwner'
+            };
 
-            expect(userEntity.find).toBeCalledWith({ email: userToCreate.email });
-            expect(user).toEqual(userToCreate);
+            const userEntity = mockUserEntitySuccess(userToCreate, createdUser);
+            const userRepository = createUserRepository(userEntity, mockEncryptorFunction(hash));
+            try {
+                const user = await userRepository.create(userToCreate.username, userToCreate.email, userToCreate.password, userToCreate.role);
+    
+                expect(user).toEqual(createdUser);
+                expect(userEntity.find).toBeCalledWith({ email: userToCreate.email });
+            }catch(err) {
+                throw err;
+            }
+        });
+    });
+    describe('Metodo: getAll', () => {
+        it('Debe rellenar un array con los usuarios', async () => {
+            expect.assertions(2);
+            user1 = {};
+            user2 = {};
+            const userListToFind = [
+                user1,
+                user2
+            ];
+            const userEntity = mockUserEntityFind(userListToFind);
+            const userRepository = createUserRepository(userEntity);
+            try {
+                const userList = await userRepository.getAll();
+                expect(userList).toEqual(userListToFind);
+                expect(userEntity.find).toBeCalledWith({});
+            }catch(err) {
+                throw err;
+            };
         });
     });
 });
