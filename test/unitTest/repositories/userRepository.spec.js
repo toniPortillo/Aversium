@@ -11,6 +11,10 @@ const mockUserEntityFind = userList => ({
 
 const mockEncryptorFunction = jest.fn().mockImplementation(hash => () => new Promise(resolve => resolve(hash)));
 
+const mockUserEntityRemove = userToRemove => ({
+    remove: jest.fn(() => new Promise(resolve => resolve(userToRemove)))
+});
+
 describe('Repositorio: User', () => {
     describe('Metodo: create', () => {
         it('Debe crear un usuario, si este no existe', async () => {
@@ -56,6 +60,7 @@ describe('Repositorio: User', () => {
             };
         });
     });
+
     describe('Metodo: getAll', () => {
         it('Debe rellenar un array con los usuarios', async () => {
             expect.assertions(2);
@@ -88,6 +93,7 @@ describe('Repositorio: User', () => {
             };
         });
     });
+
     describe('Metodo: findOneByName', () => {
         it('Debe devolver el usuario, si lo encuentra por el nombre', async () => {
             expect.assertions(2);
@@ -122,5 +128,65 @@ describe('Repositorio: User', () => {
                 expect(err instanceof Error).toBeTruthy();
             };
         });
+    });
+
+    describe('Metodo: findOneById', () => {
+        it('Debe devolver el usuario, si lo encuentra por el id', async () => {
+            expect.assertions(2);
+            const _id = "userId";
+            const userToFound = {
+                _id: "userId",
+                username: "USERNAME",
+                email: "useremail@aversium.com",
+                password: "hash",
+                role: "scrumMaster"
+            };
+            const userEntity = mockUserEntityFind(userToFound);
+            const userRepository = createUserRepository(userEntity);
+            try {
+                const foundUser = await userRepository.findOneById(_id);
+                expect(foundUser).toEqual(userToFound);
+                expect(userEntity.find).toBeCalledWith({_id: _id});
+            }catch(err) {
+                throw err;
+            };
+        });
+        it('Debe devolver un error, sino encuentra el usuario por el id', async () => {
+            expect.assertions(2);
+            const _id = "userId";
+            const userToFound = [];
+            const userEntity = mockUserEntityFind(userToFound);
+            const userRepository = createUserRepository(userEntity);
+            try {
+                const foundUser = await userRepository.findOneById(_id);
+            }catch(err) {
+                expect(err.message).toEqual("Usuario no encontrado");
+                expect(err instanceof Error).toBeTruthy();
+            };
+        });
+    });
+
+    describe('Metodo: removeById', () => {
+        it('Debe eliminar el equipo, si lo encuentra por el id', async () => {
+            expect.assertions(2);
+            const _id = "userId";
+            const userToRemove = {
+                _id: "userId",
+                username: "USERNAME",
+                email: "usertoremove@aversium.com",
+                password: "hash",
+                role: "developer"
+            };
+
+            const userEntity = mockUserEntityRemove(userToRemove);
+            const userRepository = createUserRepository(userEntity);
+            try {
+                const userDeleted = await userRepository.removeById(_id);
+                expect(userDeleted).toEqual(userToRemove);
+                expect(userEntity.remove).toBeCalledWith({_id: _id});
+            }catch(err) {
+                throw err;
+            }
+        });   
     });
 });

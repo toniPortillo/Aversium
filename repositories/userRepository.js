@@ -34,5 +34,24 @@ module.exports = (userEntity, encryptor, passwordComparer) => ({
         }catch(err) {
             throw err;
         };
+    },
+    findOneById: async _id => {
+        const query = {_id: _id};
+        try {
+            const foundUser = await userEntity.find(query);
+            if(foundUser.length !== 0) return foundUser;
+            throw new Error("Usuario no encontrado");
+        }catch(err) {
+            throw err;
+        };
+    },
+    removeById: async _id => {
+        const query = {_id: _id};
+        try {
+            const userDeleted = await userEntity.remove(query);
+            return userDeleted;
+        }catch(err) {
+            throw err;
+        };
     }
 });
