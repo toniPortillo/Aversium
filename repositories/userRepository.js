@@ -1,3 +1,4 @@
+'use strict';
 module.exports = (userEntity, encryptor, passwordComparer) => ({
     create: async (username, email, password, role) => {
         const query = { email };
