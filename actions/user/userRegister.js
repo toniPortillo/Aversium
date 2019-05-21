@@ -16,11 +16,22 @@ module.exports = userRepository => {
         });
     };
 
+    const _roleValidation = role => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if(role === "productOwner" || role === "scrumMaster" || role === "developer") resolve("Successful validation");
+                reject(new Error("Error: este rol no esta contemplado"));
+            }, 0);
+        });
+    };
+
     return async userToCreate => {
-        if(userToCreate === undefined || userToCreate.length === 0) throw new Error("Usuari vacio");
+        if(userToCreate === undefined || userToCreate.length === 0) throw new Error("Usuario vacio o no definido");
         try {
             const validation = await _validations(userToCreate);
             if(validation !== "Successful validation") throw new Error(validation.message);
+            const roleValidation = await _roleValidation(userToCreate.role)
+            if(roleValidation !== "Successful validation") throw new Error(roleValidation.message);
             const user = await userRepository.create(userToCreate.username, userToCreate.email, userToCreate.password, userToCreate.role);
             if(user.message === "Usuario ya existente") throw new Error(user.message);
             const createdUser = {
