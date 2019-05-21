@@ -20,7 +20,14 @@ module.exports = userRepository => {
         if(userToCreate === undefined || userToCreate.length === 0) throw new Error("Usuari vacio");
         try {
             const validation = await _validations(userToCreate);
-            if(validation !== "Successful validation") 
+            if(validation !== "Successful validation") throw new Error(validation.message);
+            const user = await userRepository.create(userToCreate.username, userToCreate.email, userToCreate.password, userToCreate.role);
+            if(user.message === "Usuario ya existente") throw new Error(user.message);
+            const createdUser = {
+                user: user,
+                message: "Usuario creado exitosamente"
+            };
+            return createdUser;
         }catch(err) {
             throw err;
         };
