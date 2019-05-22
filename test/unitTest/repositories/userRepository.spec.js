@@ -167,7 +167,7 @@ describe('Repositorio: User', () => {
     });
 
     describe('Metodo: removeById', () => {
-        it('Debe eliminar el equipo, si lo encuentra por el id', async () => {
+        it('Debe eliminar el usuario, si lo encuentra por el id', async () => {
             expect.assertions(2);
             const _id = "userId";
             const userToRemove = {
@@ -188,5 +188,27 @@ describe('Repositorio: User', () => {
                 throw err;
             }
         });   
+    });
+
+    describe('Metodo: modifyRole', () => {
+        it('Debe modificar el usuario, si lo encuentra por el id', async () => {
+            expect.assertions(2);
+            const role = "scrumMaster";
+            const userToModify = {
+                _id: "userId",
+                username: "username",
+                email: "usertomodify@aversium.com",
+                password: "hash",
+                role: "developer"
+            };
+
+            const modifiedUser = {
+                _id: "userId",
+                username: "username",
+                email: "usertomodify@aversium.com",
+                password: "hash",
+                role: "scrumMaster"
+            };
+        });
     });
 });

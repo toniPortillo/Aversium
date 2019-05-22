@@ -54,5 +54,23 @@ module.exports = (userEntity, encryptor) => ({
         }catch(err) {
             throw err;
         };
+    },
+    modifyRole: async (_id, role) => {
+        const query = {_id: _id};
+        try {
+            const modifiedUser = await userEntity.findOneAndUpdate(query, {role: role});
+            return modifiedUser;
+        }catch(err) {
+            throw err;
+        };
+    },
+    modifyPassword: async (_id, password) => {
+        const query = {_id: _id};
+        try {
+            const modifiedUser = await userEntity.findOneAndUpdate(query, {password, password});
+            return modifiedUser;
+        }catch(err) {
+            throw err
+        };
     }
 });
