@@ -94,12 +94,12 @@ describe('Repositorio: User', () => {
         });
     });
 
-    describe('Metodo: findOneByName', () => {
-        it('Debe devolver el usuario, si lo encuentra por el nombre', async () => {
+    describe('Metodo: findOneByEmail', () => {
+        it('Debe devolver el usuario, si lo encuentra por el email', async () => {
             expect.assertions(2);
-            const username = "USERNAME";
+            const email = "";
             const userToFound = {
-                _id: "userId",
+                _id: "useremail@aversium.com",
                 username: "USERNAME",
                 email: "useremail@aversium.com",
                 password: "hash",
@@ -108,21 +108,21 @@ describe('Repositorio: User', () => {
             const userEntity = mockUserEntityFind(userToFound);
             const userRepository = createUserRepository(userEntity);
             try {
-                const foundUser = await userRepository.findOneByName(username);
+                const foundUser = await userRepository.findOneByEmail(email);
                 expect(foundUser).toEqual(userToFound);
-                expect(userEntity.find).toBeCalledWith({username: username});
+                expect(userEntity.find).toBeCalledWith({email: email});
             }catch(err) {
                 throw err;
             };
         });
-        it('Debe devolver un error, sino encuentra el usuario por el nombre', async () => {
+        it('Debe devolver un error, sino encuentra el usuario por el email', async () => {
             expect.assertions(2);
-            const username = "USERNAME";
+            const email = "useremail@aversium.com";
             const userToFound = [];
             const userEntity = mockUserEntityFind(userToFound);
             const userRepository = createUserRepository(userEntity);
             try {
-                const foundUser = await userRepository.findOneByName(username);
+                const foundUser = await userRepository.findOneByEmail(email);
             }catch(err) {
                 expect(err.message).toEqual("Usuario no encontrado");
                 expect(err instanceof Error).toBeTruthy();

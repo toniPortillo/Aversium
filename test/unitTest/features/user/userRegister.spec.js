@@ -6,7 +6,7 @@ const mockUserRepositoryCreate = userToCreate => ({
 });
 
 describe('Action user', () => {
-    describe('Metodo userRegister', () => {
+    describe('Metodo: userRegister', () => {
         it('Debe crear un usuario, si todos los parámetros estan correcto', async () => {
             expect.assertions(2);
             const userToCreate = {

@@ -1,5 +1,5 @@
 'use strict';
-module.exports = (userEntity, encryptor, passwordComparer) => ({
+module.exports = (userEntity, encryptor) => ({
     create: async (username, email, password, role) => {
         const query = { email };
         try {
@@ -26,8 +26,8 @@ module.exports = (userEntity, encryptor, passwordComparer) => ({
             throw err;
         };
     },
-    findOneByName: async username => {
-        const query = {username: username};
+    findOneByEmail: async email => {
+        const query = {email: email};
         try {
             const foundUser = await userEntity.find(query);
             if(foundUser.length !== 0) return foundUser;
