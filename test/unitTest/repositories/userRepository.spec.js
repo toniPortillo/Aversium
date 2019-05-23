@@ -15,6 +15,10 @@ const mockUserEntityRemove = userToRemove => ({
     remove: jest.fn(() => new Promise(resolve => resolve(userToRemove)))
 });
 
+const mockUserEntityFindOneAndUpdate = modifyUser => ({
+    findOneAndUpdate: jest.fn(() => new Promise(resolve => resolve(modifyUser)))
+});
+
 describe('Repositorio: User', () => {
     describe('Metodo: create', () => {
         it('Debe crear un usuario, si este no existe', async () => {
@@ -191,7 +195,7 @@ describe('Repositorio: User', () => {
     });
 
     describe('Metodo: modifyRole', () => {
-        it('Debe modificar el usuario, si lo encuentra por el id', async () => {
+        it('Debe modificar el rol de usuario, si lo encuentra por el id', async () => {
             expect.assertions(2);
             const role = "scrumMaster";
             const userToModify = {
@@ -201,14 +205,53 @@ describe('Repositorio: User', () => {
                 password: "hash",
                 role: "developer"
             };
-
             const modifiedUser = {
                 _id: "userId",
                 username: "username",
                 email: "usertomodify@aversium.com",
                 password: "hash",
+                role: role
+            };
+            const userEntity = mockUserEntityFindOneAndUpdate(modifiedUser);
+            const userRepository = createUserRepository(userEntity);
+            try {
+                const user = await userRepository.modifyRole(userToModify._id, role);
+                expect(user).toEqual(modifiedUser);
+                expect(userEntity.findOneAndUpdate).toBeCalledWith( {_id: userToModify._id}, {role: role});
+            }catch(err) {
+                throw err;
+            }
+        });
+    });
+
+    describe('Metodo: modifyPassword', () => {
+        it('Debe modificar la password de usuario, si lo encuentra por el id', async () => {
+            expect.assertions(2);
+            expect.assertions(2);
+            const password = "hash"
+            const userToModify = {
+                _id: "userId",
+                username: "username",
+                email: "usertomodify@aversium.com",
+                password: "password",
+                role: "developer"
+            };
+            const modifiedUser = {
+                _id: "userId",
+                username: "username",
+                email: "usertomodify@aversium.com",
+                password: password,
                 role: "scrumMaster"
             };
+            const userEntity = mockUserEntityFindOneAndUpdate(modifiedUser);
+            const userRepository = createUserRepository(userEntity);
+            try {
+                const user = await userRepository.modifyPassword(userToModify._id, password);
+                expect(user).toEqual(modifiedUser);
+                expect(userEntity.findOneAndUpdate).toBeCalledWith( {_id: userToModify._id}, {password: password});
+            }catch(err) {
+                throw err;
+            }
         });
     });
 });
