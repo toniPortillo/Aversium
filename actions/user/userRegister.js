@@ -20,7 +20,7 @@ module.exports = userRepository => {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 if(role === "productOwner" || role === "scrumMaster" || role === "developer") resolve("Successful validation");
-                reject(new Error("Error: este rol no esta contemplado"));
+                else reject(new Error("Error: este rol no esta contemplado"));
             }, 0);
         });
     };
