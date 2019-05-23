@@ -1,3 +1,4 @@
+'use strict';
 const createUserRepository = require('../../../repositories/userRepository');
 
 const mockUserEntitySuccess = (userToCreate, createdUser) => ({
@@ -68,8 +69,8 @@ describe('Repositorio: User', () => {
     describe('Metodo: getAll', () => {
         it('Debe rellenar un array con los usuarios', async () => {
             expect.assertions(2);
-            user1 = {};
-            user2 = {};
+            const user1 = {};
+            const user2 = {};
             const userListToFind = [
                 user1,
                 user2
