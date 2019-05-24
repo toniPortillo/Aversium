@@ -1,5 +1,5 @@
 'use strict';
-module.exports = (bcrypt) => {
+module.exports = bcrypt => {
     return async password => {
         try {
             const hash = await bcrypt.hash(password, 12);
