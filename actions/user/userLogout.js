@@ -1,5 +1,5 @@
 'use strict';
-module.exports = session => {
+module.exports = () => session => {
     session.destroy()
     .then(() => {
         return "Se cerro sesión con exito";
