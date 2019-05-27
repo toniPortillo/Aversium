@@ -1,14 +1,13 @@
 'use strict';
-module.exports = (userEntity, encryptor) => ({
+module.exports = (userEntity) => ({
     create: async (username, email, password, role) => {
         const query = { email };
         try {
             const foundUser = await userEntity.find(query);
             if(!foundUser.length) {
-                const hash = await encryptor(password);
                 userEntity.username = username;
                 userEntity.email = email;
-                userEntity.password = hash;
+                userEntity.password = password;
                 userEntity.role = role;
                 return await userEntity.save();
             } else throw new Error("Usuario ya existente");

@@ -5,8 +5,6 @@ const encryptor = require('../../services/user/encryptor');
 const repositories = require('../../repositories/index');
 
 const userRepository = repositories.User;
-const teamRepository = repositories.Team;
-const projectRepository = repositories.Project;
 
 const passwordComparerLoaded = passwordComparer(bcrypt);
 const encryptorLoaded = encryptor(bcrypt);
