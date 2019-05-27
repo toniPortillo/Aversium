@@ -17,7 +17,7 @@ const createModifyPassword = require('./modifyPassword');
 const createUserLogout = require('./userLogout');
 
 module.exports = {
-    userRegister: createUserRegister(userRepository),
+    userRegister: createUserRegister(userRepository, encryptorLoaded),
     userLogin: createUserLogin(userRepository, passwordComparerLoaded),
     showUser: createShowUser(userRepository),
     modifyRole = createModifyRole(userRepository),
