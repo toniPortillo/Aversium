@@ -38,12 +38,11 @@ describe('Action Team', () => {
         it('Debe crear un equipo con maxmembers igual a 1, si es menor que 1', async () => {
             expect.assertions(2);
             const user = [{_id: "userID"}];
-            let greatherThanZero = 0
             const teamToCreate = {
                 _id: "teamId",
                 teamname: "TEAMNAME",
                 creator: user,
-                maxmembers: greatherThanZero,
+                maxmembers: 0,
                 users: user
             };
             const teamGreatherThanZero = {
@@ -58,12 +57,12 @@ describe('Action Team', () => {
                 message:"Equipo creado exitosamente"
             };
             
-            const teamRepository = mockTeamRepositoryCreateSuccess(teamCreated);
+            const teamRepository = mockTeamRepositoryCreateSuccess(teamGreatherThanZero);
             const teamAction = createTeam(teamRepository);
             try {
                 const team = await teamAction(teamToCreate, user);
                 expect(team).toEqual(teamCreated);
-                expect(teamRepository.create).toBeCalledWith(teamToCreate.teamname, user, greatherThanZero);
+                expect(teamRepository.create).toBeCalledWith(teamToCreate.teamname, user, teamGreatherThanZero.maxmembers);
             }catch(err) {
                 throw err;
             }
