@@ -42,6 +42,6 @@ module.exports = teamRepository => {
             return teamCreated;
         }catch(err) {
             throw err;
-        }
+        };
     };
 };

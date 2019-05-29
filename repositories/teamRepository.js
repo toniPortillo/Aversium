@@ -69,8 +69,8 @@ module.exports = teamEntity => ({
     modifyMembersNumber: async (_id, membersNumber) => {
         const query = {_id: _id};
         try {
-            const foundTeam = await teamEntity.findOneAndUpdate(query, {maxmembers: membersNumber});
-            return foundTeam;
+            const modifiedTeam = await teamEntity.findOneAndUpdate(query, {maxmembers: membersNumber});
+            return modifiedTeam;
         }catch(err) {
             throw err;
         }
