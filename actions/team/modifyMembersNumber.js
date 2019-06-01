@@ -1,7 +1,7 @@
 'use strict';
 module.exports = teamRepository => {
     const _validateCreator = (team, creator) => {
-        return new Promise((resolve, rejects) => {
+        return new Promise((resolve, reject) => {
             setTimeout(() => {
                 if(creator === undefined) reject(new Error("Creador no definido"));
                 else if(team[0].creator[0]._id === creator[0]._id) resolve(team);
@@ -21,13 +21,15 @@ module.exports = teamRepository => {
     };
 
     return async (teamID, user, maxMembers) => {
-        if(team === undefined || team.length === 0) throw new Error("Equipo vacio o no definido");
+        if(teamID === undefined || teamID.length === 0) throw new Error("Id de equipo vacia o no definida");
         try {
             const foundTeam = await teamRepository.findOneById(teamID);
             if(foundTeam instanceof Error) throw new Error(foundTeam.message);
-            const teamModificationValidator = await _validateCreator(foundTeam, user);
-            if(teamModificationValidator instanceof Error) throw new Error(teamModificationValidator.message);
-            const modifiedTeam = await teamRepository.modifyMembersNumber(teamModificationValidator[0]._id, maxMembers);
+            const validateCreator = await _validateCreator(foundTeam, user);
+            if(validateCreator instanceof Error) throw new Error(validateCreator.message);
+            const validateMaxMembers = await _validateMaxMembers(validateCreator, maxMembers);
+            if(validateMaxMembers instanceof Error) throw new Error(validateMaxMembers.message)
+            const modifiedTeam = await teamRepository.modifyMembersNumber(validateMaxMembers[0]._id, maxMembers);
             if(modifiedTeam instanceof Error) throw new Error(modifiedTeam.message);
             const resultingTeam = {
                 team: modifiedTeam,
