@@ -1,5 +1,5 @@
 'use strict';
-module.exports = (teamRepository, checkTeamService) => {
+module.exports = (teamRepository, userRepository, checkTeamService) => {
     const _validateCreator = (team, creator) => {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -19,14 +19,16 @@ module.exports = (teamRepository, checkTeamService) => {
         });
     };
 
-    return async (team, user, newMember) => {
+    return async (team, user, emailNewMember) => {
         if(team === undefined || team.length === 0) throw new Error("Equipo vacio o no definido");
         try {
             const validateCreator = await _validateCreator(team, user);
             if(validateCreator instanceof Error) throw new Error(validateCreator.message);
-            const validateTeamCapacity = await _validateTeamCapacity(team);
+            const validateTeamCapacity = await _validateTeamCapacity(validateCreator);
             if(validateTeamCapacity instanceof Error) throw new Error(validateTeamCapacity.message);
-            const checkTeam = checkTeamService(team[0], newMember[0]);
+            const newMember = userRepository.findOneByEmail(emailNewMember);
+            if(newMember instanceof Error) throw new Error(newMember.message);
+            const checkTeam = checkTeamService(validateTeamCapacity[0], newMember[0]);
             const validatedMember = await checkTeam();
             if(validatedMember instanceof Error) throw new Error(validatedMember.message);
             validateTeamCapacity[0].users.push(validatedMember);
