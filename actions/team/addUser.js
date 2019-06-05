@@ -5,7 +5,7 @@ module.exports = (teamRepository, userRepository, checkTeamService) => {
             setTimeout(() => {
                 if(creator === undefined || creator.length === 0) reject(new Error("Creador vacio o no definido"));
                 else if(team[0].creator[0]._id === creator[0]._id) resolve(team);
-                reject(new Error("No puede modificar el equipo, por no ser su responsable"));
+                else reject(new Error("No puede modificar el equipo, por no ser su responsable"));
             }, 0);
         });
     };
