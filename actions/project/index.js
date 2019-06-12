@@ -10,3 +10,11 @@ const createShowProjects = require('./showProjects');
 const createShowProject = require('./showProject');
 const createModifyProject = require('./modifyProject');
 const createRemoveProject = require('./removeProject');
+
+module.exports = {
+    createProject: createCreateProject(projectRepository),
+    showProjects: createShowProjects(projectRepository),
+    showProject: createShowProject(projectRepository),
+    modifyProject: createModifyProject(projectRepository),
+    removeProject: createRemoveProject(projectRepository)
+};
