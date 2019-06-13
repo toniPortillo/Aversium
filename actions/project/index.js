@@ -14,7 +14,7 @@ const createRemoveProject = require('./removeProject');
 module.exports = {
     createProject: createCreateProject(projectRepository),
     showProjects: createShowProjects(projectRepository),
-    showProject: createShowProject(projectRepository),
+    showProject: createShowProject(projectRepository, userRepository),
     modifyProject: createModifyProject(projectRepository),
     removeProject: createRemoveProject(projectRepository)
 };
