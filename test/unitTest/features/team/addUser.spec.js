@@ -105,5 +105,8 @@ describe('Action team', () => {
         it('Debe devolver error, si ocurre algún problema en la validación', async () => {
             expect.assertions(2);
         });
+        it('Debe deolvolver error', async () => {
+            expect.assertions(3);
+        })
     });
 });
